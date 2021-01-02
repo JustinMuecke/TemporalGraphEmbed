@@ -348,7 +348,7 @@
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
-
+\usepackage{tikz}
 
 \begin{document}
 %
@@ -445,14 +445,37 @@ To start this paper out, let's first create a level playing field for all reader
 
 
 \subsection{Graphs}
-Using Graphs -> Thus explaing
-\subsection{Definition}
-\(G = (V,E)\)
+
+A graph is a mathematical construct which is used in a variety of tasks. It is often used to model relationships between entities, thus making it possible to operate on such structures to, for example, analyze them.\\
+\begin{figure}[h]
+  \begin{center}
+\begin{tikzpicture}
+  \draw (0,-0.5) node [circle,inner sep=0pt,draw] {EO};
+  \draw (1.75,-1) node [circle,inner sep=0pt,draw] {JM};
+  \draw (0.5,-2) node [circle,inner sep=0pt,draw] {OK};
+  \draw (3,-0.5) node [circle,inner sep=0pt,draw] {YH};
+  \draw (2.75,-1.75) node [circle,inner sep=0pt,draw] {PB};
+
+  \draw (0.27, -0.56) -- (1.49, -0.95);
+  \draw (1.55, -1.17) -- (0.7, -1.8);
+  \draw (2, -0.95) -- (2.75, -0.65);
+  \draw (1.95, -1.17) -- (2.55, -1.6);
+\end{tikzpicture}
+\end{center}
+\caption{part of the follower-relationship-graph of personal instagram account}
+\end{figure}
+
+
+ Mathematically it is consisting of two sets \(G = (V, E)\), where V consists of all the vertices of the Graph, and E of all the edges, represented through a tuple of two vertices.
+ Our graph above would thus look like following: \\
+ \( G_i = (\{E,O,Y,P,J\}, \{(J,E),(J,O), (J,P), (J,Y)\}) \)
+
 \subsection{Temporal Graphs}
-\(G = {G_1, G_2,\ldots ,G_t}\)
+As we want to embed not just graphs, but temporal graph, lets bring in the temporal aspekt. Let's imagine a camera that makes a picture of the graph everytime a certain amount of time passed, so we get our Graphes \(G_1\) after the first picture and so on. We then take all of our pictures and put them together into one construct, thus creating our temporal graph \(G = \{G_1, G_2,\ldots ,G_t\}\) consisting of many other graphs.\cite{temporalGraphs}
 
 \subsection{Embedding}
-Graph -> Vectorspace
+Our goal is, as previously mentioned, to analyze those temporal graphs, but graphs as mathematical structure are rather hard to compute with. Thus we want to transform it into a more accessable structure. For that we now try to transfer the information, that is modeled by the graph, into a vectorspace.
+Those Vectors have to capture the graph topology, the vertex-to-vertex relationship as well as other relevant informations.
 % needed in second column of first page if using \IEEEpubid
 %\IEEEpubidadjcol
 
@@ -641,7 +664,10 @@ Where does it differ
 % set second argument of \begin to the number of references
 % (used to reserve space for the reference number labels box)
 \begin{thebibliography}{1}
-
+\bibitem{temporalGraphs}
+George B. Mertzios and Hendrik Molter and Rolf Niedermeier and Viktor Zamaraev and Philipp Zschoche,
+\emph{Computing Maximum Matchings in Temporal Graphs},
+37th International Symposium on Theoretical Aspects of Computer Science (STACS 2020), 2020
 \bibitem{tdGraphEmbed: Temporal Dynamic Graph-Level Embedding}
 Moran Beladev, Lior Rokach, Gilad Katz, Ido Guy, Kira Radinsky, \emph{tdGraphEmbed: Temporal Dynamic Graph-Level Embedding}, {CIKM} '20: The 29th {ACM} International Conference on Information and Knowledge Management, Virtual Event, Ireland, October 19-23, 2020
 
