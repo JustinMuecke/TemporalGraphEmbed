@@ -440,13 +440,15 @@
 
 \section{Introduction}
 
-To start this paper out, let's first create a level playing field for all readers by laying out what exactly a Graph is, how it can change over time and what is meant when we talk about embedding.
+To start this paper out, let's first create a level playing field for all readers by laying out what exactly a Graph is, 
+how it can change over time and what is meant when we talk about embedding.
 
 
 
 \subsection{Graphs}
 
-A graph is a mathematical construct which is used in a variety of tasks. It is often used to model relationships between entities, thus making it possible to operate on such structures to, for example, analyze them.\\
+A graph is a mathematical construct which is used in a variety of tasks. It is often used to model relationships between 
+entities, thus making it possible to operate on such structures to, for example, analyze them.\\
 \begin{figure}[h]
   \begin{center}
 \begin{tikzpicture}
@@ -462,23 +464,83 @@ A graph is a mathematical construct which is used in a variety of tasks. It is o
   \draw (1.95, -1.17) -- (2.55, -1.6);
 \end{tikzpicture}
 \end{center}
-\caption{part of the follower-relationship-graph of personal instagram account}
+\caption{Part of the follower-relationship-graph of personal Instagramaccount}
 \end{figure}
 
 
  Mathematically it is consisting of two sets \(G = (V, E)\), where V consists of all the vertices of the Graph, and E of all the edges, represented through a tuple of two vertices.
  Our graph above would thus look like following: \\
- \( G_i = (\{E,O,Y,P,J\}, \{(J,E),(J,O), (J,P), (J,Y)\}) \)
+ \( G_i = (\{E,O,Y,P,J\}, \{(J,E),(J,O), (J,P), (J,Y)\}) \).
 
 \subsection{Temporal Graphs}
-As we want to embed not just graphs, but temporal graph, lets bring in the temporal aspekt. Let's imagine a camera that makes a picture of the graph everytime a certain amount of time passed, so we get our Graphes \(G_1\) after the first picture and so on. We then take all of our pictures and put them together into one construct, thus creating our temporal graph \(G = \{G_1, G_2,\ldots ,G_t\}\) consisting of many other graphs.\cite{temporalGraphs}
+As we want to embed not just graphs, but temporal graph, lets bring in the temporal aspect. Let's imagine a camera that makes a picture of the graph everytime a certain 
+amount of time passed, so we get our Graphs \(G_1\) after the first picture and so on. We then take all of our pictures and put them together into one construct, 
+thus creating our temporal graph \(G = \{G_1, G_2,\ldots ,G_t\}\) consisting of many other graphs.\cite{temporalGraphs}
 
 \subsection{Embedding}
-Our goal is, as previously mentioned, to analyze those temporal graphs, but graphs as mathematical structure are rather hard to compute with. Thus we want to transform it into a more accessable structure. For that we now try to transfer the information, that is modeled by the graph, into a vectorspace.
-Those Vectors have to capture the graph topology, the vertex-to-vertex relationship as well as other relevant informations.
-% needed in second column of first page if using \IEEEpubid
-%\IEEEpubidadjcol
+Our goal is, as previously mentioned, to analyze those temporal graphs, but graphs as mathematical structure are rather hard to compute with. 
+Thus, we want to transform it into a more accessible structure. For that we now try to transfer the information, that is modeled by the graph, into a vector space.
+Those Vectors have to capture the graph topology, the vertex-to-vertex relationship as well as other relevant information. Overall we can divide graph embedding techniques into two 
+categories; vertex embedding and graph embedding. When using vertex embedding, we create for each vertex its own vector representation. This is used when we want to perform predicition 
+on a node level.
 
+When using graph embedding, on the other hand, we create one vector representation of the whole graph. Most useful is this method when we want to analyze our data on a graph level e.g.
+comparing two graph structures with each other.\\
+To better understand how these methods are working we are now going to look at a few examples
+\subsubsection{word2vec}
+First lets take a look at the word2vec algorithm. This is used as the basis of many other embedding algorithms.
+The goal hereby is, that words that are similar to each other get a similar vector representation, and that the text can be represented solely through our vectors.
+To achieve this, we start by training a neural network over a sample text. This neural network consists of one input-, one hidden- and one output layer. 
+We then train this network to detect how likely it is to have two words in one neighborhood. Here, a neighborhood contains the word in question as well as
+all words that are either in a fixed distance before or after it. A classical distance for this window is 5.
+As input, we use a one-hot code of all the words in our test file, e.g. the first word has a vector of \((1, 0,\ldots ,0)\), and as output we use a softmax vector to 
+describe the probability of the words being next to the starting word. With this achievement we can now satisfy our problem conditions, because we now have all the information 
+from the text assembled in multiple vectors.
+
+\begin{figure}[h]
+  \begin{center}
+    \scalebox{0.8}{
+    \begin{tikzpicture}
+
+      \draw (0,0) rectangle (2,1) node[pos=.5] {Philosopers};  
+      \draw (2,0) rectangle (3,1) node[pos=.5] {have};  
+      \draw [fill=gray](3,0) rectangle (4.5,1) node[pos=.5] {debated};  
+      \draw [fill=lightgray](4.5,0) rectangle (6,1) node[pos=.5] {Hume's};  
+      \draw [fill=gray](6,0) rectangle (7.5,1) node[pos=.5] {problem}; 
+
+      \draw (0,1.5) rectangle (2,2.5) node[pos=.5] {Philosopers};  
+      \draw [fill=gray](2,1.5) rectangle (3,2.5) node[pos=.5] {have};  
+      \draw [fill=lightgray](3,1.5) rectangle (4.5,2.5) node[pos=.5] {debated};  
+      \draw [fill=gray](4.5,1.5) rectangle (6,2.5) node[pos=.5] {Hume's};  
+      \draw (6,1.5) rectangle (7.5,2.5) node[pos=.5] {problem}; 
+
+      \draw [fill=gray](0,3) rectangle (2,4) node[pos=.5] {Philosopers};  
+      \draw [fill=lightgray](2,3) rectangle (3,4) node[pos=.5] {have};  
+      \draw [fill=gray](3,3) rectangle (4.5,4) node[pos=.5] {debated};  
+      \draw (4.5,3) rectangle (6,4) node[pos=.5] {Hume's};  
+      \draw (6,3) rectangle (7.5,4) node[pos=.5] {problem}; 
+
+      \draw [fill=lightgray](0,4.5) rectangle (2,5.5) node[pos=.5] {Philosopers};  
+      \draw [fill=gray](2,4.5) rectangle (3,5.5) node[pos=.5] {have};  
+      \draw (3,4.5) rectangle (4.5,5.5) node[pos=.5] {debated};  
+      \draw (4.5,4.5) rectangle (6,5.5) node[pos=.5] {Hume's};  
+      \draw (6,4.5) rectangle (7.5,5.5) node[pos=.5] {problem}; 
+
+  \end{tikzpicture}}
+\end{center}
+\caption{The light gray words are our Input and the dark-gray words our neighbors for a window size of 1}
+\end{figure}
+
+\subsubsection*{DeepWalk}
+
+\subsubsection*{Structural Deep Network Embedding}
+
+
+\subsubsection*{Graph2Vec}
+
+
+\cite{EmbeddingSummary}
+\newpage
 \section{Methods}
 
 \subsection{tbGraphEmbed}
@@ -668,6 +730,10 @@ Where does it differ
 George B. Mertzios and Hendrik Molter and Rolf Niedermeier and Viktor Zamaraev and Philipp Zschoche,
 \emph{Computing Maximum Matchings in Temporal Graphs},
 37th International Symposium on Theoretical Aspects of Computer Science (STACS 2020), 2020
+\bibitem{EmbeddingSummary}
+Primož Godec \emph{Graph Embeddings — The Summary}
+https://towardsdatascience.com/graph-embeddings-the-summary-cc6075aba007
+Dec 31, 2018
 \bibitem{tdGraphEmbed: Temporal Dynamic Graph-Level Embedding}
 Moran Beladev, Lior Rokach, Gilad Katz, Ido Guy, Kira Radinsky, \emph{tdGraphEmbed: Temporal Dynamic Graph-Level Embedding}, {CIKM} '20: The 29th {ACM} International Conference on Information and Knowledge Management, Virtual Event, Ireland, October 19-23, 2020
 

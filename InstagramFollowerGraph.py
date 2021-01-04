@@ -1,10 +1,13 @@
 
 import instaloader
 
+
+
+
 L = instaloader.Instaloader()
 
 # Login or load session
-L.login("my_mtg_collection", "hallodudepp")        # (login)
+L.login("my_mtg_collection", "hallodudepp")
 
 
 # Obtain profile metadata
