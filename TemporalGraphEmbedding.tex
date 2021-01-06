@@ -76,6 +76,7 @@
 %% the next command will enable that style.
 %%\citestyle{acmauthoryear}
 \usepackage{tikz}
+
 %%
 %% end of the preamble, start of the body of the document source.
 \begin{document}
@@ -180,7 +181,7 @@ Overall we can divide graph embedding techniques into two categories;
 vertex embedding and graph embedding. \\
 When using vertex embedding, there has to be one vector \(v\) for each node in \(G\), so that \(|V| = |V_g|\). This is used to make prediction 
 on a node level.\\
-When using graph embedding, there is one vector representing the whole graph. Most useful is this method to analyze the data on a graph level e.g.
+When using graph embedding, there is one vector representing the whole graph. This method is most useful to analyze the data on a graph level e.g.
 comparing two graph structures with each other.\\
 In order to achieve this transformation there are several methods available.
 
@@ -188,13 +189,10 @@ In order to achieve this transformation there are several methods available.
 The first method is word2vec which is the foundation for many other methods. 
 It takes a text \(T = (w_1, w_2, \ldots, w_n)\) as input and returns a set of vectors\(V\), where \(v_i\) is a distribution describing how likely it is for each word 
 to be a direct neighbor to it. The neighbors of a word \(w_c\) are defined as \(\{w_i | i \in (c-\epsilon, c+\epsilon)\}\) where \(\epsilon\) describes a predefined window size.
-With this, the whole text it represented solely through vectors, where similar words have similar vectors.
-One way to achieve this is to train a neural network to create the distributions. This neural network consists of one input-, one hidden- and one output layer. 
+With this, the whole text is represented solely through vectors, where similar words have similar vectors.
+One way to achieve this, is to train a neural network to create the distributions. This neural network consists of one input-, one hidden- and one output layer. 
 Each word in our text is assigned an ID through a one-hot coded vector, so that each word \(w_i\) can be represented like \((0_1, 0_2, \ldots, 0_{i-1}, 1_i, 0_{i+1}, \ldots 0_n)\).
 It then computes how likely it is for each word to be its neighbor and transforms it into a distribution using a softmax-function\cite{softmax}.
-
-
-
 \begin{figure}[h]
   \begin{center}
     \scalebox{0.8}{
@@ -205,39 +203,55 @@ It then computes how likely it is for each word to be its neighbor and transform
       \draw [fill=lightgray](4.5,0) rectangle (6,1) node[pos=.5] {Hume's};  
       \draw [fill=gray](6,0) rectangle (7.5,1) node[pos=.5] {problem}; 
 
-      \draw (0,1.5) rectangle (2,2.5) node[pos=.5] {Philosopers};  
-      \draw [fill=gray](2,1.5) rectangle (3,2.5) node[pos=.5] {have};  
-      \draw [fill=lightgray](3,1.5) rectangle (4.5,2.5) node[pos=.5] {debated};  
-      \draw [fill=gray](4.5,1.5) rectangle (6,2.5) node[pos=.5] {Hume's};  
-      \draw (6,1.5) rectangle (7.5,2.5) node[pos=.5] {problem}; 
+      \draw (0,1.3) rectangle (2,2.3) node[pos=.5] {Philosopers};  
+      \draw [fill=gray](2,1.3) rectangle (3,2.3) node[pos=.5] {have};  
+      \draw [fill=lightgray](3,1.3) rectangle (4.5,2.3) node[pos=.5] {debated};  
+      \draw [fill=gray](4.5,1.3) rectangle (6,2.3) node[pos=.5] {Hume's};  
+      \draw (6,1.3) rectangle (7.5,2.3) node[pos=.5] {problem}; 
 
-      \draw [fill=gray](0,3) rectangle (2,4) node[pos=.5] {Philosopers};  
-      \draw [fill=lightgray](2,3) rectangle (3,4) node[pos=.5] {have};  
-      \draw [fill=gray](3,3) rectangle (4.5,4) node[pos=.5] {debated};  
-      \draw (4.5,3) rectangle (6,4) node[pos=.5] {Hume's};  
-      \draw (6,3) rectangle (7.5,4) node[pos=.5] {problem}; 
+      \draw [fill=gray](0,2.6) rectangle (2,3.6) node[pos=.5] {Philosopers};  
+      \draw [fill=lightgray](2,2.6) rectangle (3,3.6) node[pos=.5] {have};  
+      \draw [fill=gray](3,2.6) rectangle (4.5,3.6) node[pos=.5] {debated};  
+      \draw (4.5,2.6) rectangle (6,3.6) node[pos=.5] {Hume's};  
+      \draw (6,2.6) rectangle (7.5,3.6) node[pos=.5] {problem}; 
 
-      \draw [fill=lightgray](0,4.5) rectangle (2,5.5) node[pos=.5] {Philosopers};  
-      \draw [fill=gray](2,4.5) rectangle (3,5.5) node[pos=.5] {have};  
-      \draw (3,4.5) rectangle (4.5,5.5) node[pos=.5] {debated};  
-      \draw (4.5,4.5) rectangle (6,5.5) node[pos=.5] {Hume's};  
-      \draw (6,4.5) rectangle (7.5,5.5) node[pos=.5] {problem}; 
+      \draw [fill=lightgray](0,3.9) rectangle (2,4.9) node[pos=.5] {Philosopers};  
+      \draw [fill=gray](2,3.9) rectangle (3,4.9) node[pos=.5] {have};  
+      \draw (3,3.9) rectangle (4.5,4.9) node[pos=.5] {debated};  
+      \draw (4.5,3.9) rectangle (6,4.9) node[pos=.5] {Hume's};  
+      \draw (6,3.9) rectangle (7.5,4.9) node[pos=.5] {problem}; 
 
     \end{tikzpicture}}
   \end{center}
-  \caption{Light-gray word, with dark-gray neighbor and \(\epsilon = 1\)}
+  \caption{Light-gray word, with dark-gray neighbor and \(\epsilon = 1\).}
 \end{figure}
 
 \subsubsection{DeepWalk}
-This method is a continuation of the word2vec approach. 
-Overall, the method consists of three steps. First the sampling, which is done using random walks on our graph starting on a selected node.
-Hereby, a random walk describes a random succession of nodes of defined length. It is sufficient to perform 32 to 64 random Walks per node.
-Those random walks are now of the same form as sentences used in the word2vec method, meaning we can train a similar neural network for predicting
-the neighborhood of our nodes.
+This method is a continuation of the word2vec approach, but now the input is not a text, but a graph \(G = (V,E)\)
+It consists of three steps. The first being the sampling, where random walks are performed from each node.
+Hereby, a random walk is a path in the graph from a starting point \(v_i\) of defined length \(\lambda\). 
+The following nodes are generated by: 
+\begin{center}
+  \(P(v_i = x|v_{i-1} = y) = \begin{cases} \frac{\pi_{xy}}{Z} &\text{if} (x,y) \in E \\ 0 & \text{otherwise} \end{cases}\)
+\end{center} 
+where \(\pi_{xy}\) is the probability between nodes \(x\) and \(y\) with\(Z\) as the normalizing constant.\\
+It is sufficient to perform \(32-64\) random walks per Node. The resulting paths are of the same structure as sentences in a text, so 
+the word2vec method can now be used on it.
+The result is a set of vectors \(V\) where each vector \(v_i\) is a distribution of the probability that two nodes are next to each other.
+
 
 \subsubsection{Node2Vec}
-Here we modify our DeepWalk method. For that purpose we introduce 2 variables \(P\) and \(Q\), where \(Q\) defines how likely it is to go to an unvisited node,
-while \(P\) describes how probable it is to revisit a node.
+This is an optimized version of DeepWalk.
+Again, there is the sampling phase in the beginning. The difference in the methods is, that in Node2Vec the random walks are now biased and not completely random.
+An order for the random walk is defined through two parameters \(p\) and \(q\). To evaluate which node to visit next the walk looks at the transition probability
+\(\pi_{xy}\) on the edge \((x,y)\). This probability is now defined as \(\pi_{xy} = \alpha_{pq}(x, y) * w_{xy}\) where \(w_{xy}\) is the weight assigned to the edge \((x,y)\) and:
+\begin{center}
+ \(\alpha_{pq}(xy) = \begin{cases} \frac{1}{p} & \text{if } d_{xy} = 0 \\ 1 & \text{if } d_{xy} = 1 \\\frac{1}{q} & \text{if } d_{xy} = 2 \\\end{cases}\)
+\end{center}
+with \(d_{xy}\) being the shortest path between nodes \(x\) and \(y\).
+Hereby, our parameter \(p\) defines how likely it is to revisit a node of the walk. Setting \(p\) to a higher value encourages the walk to go deeper into the graph, whereas a small value 
+ensures the walk to stay local around the starting point. 
+In contrast, \(q\) describes the preference of nearer or further nodes. For \(q > 1\) the walk favors closer nodes, for \(q < 1\) nodes that are further away.\cite{node2vec}
 
 \subsubsection{Structural Deep Network Embedding}
 In contrast to the methods used before, SDNE does not use random walks. It aims to preserve local pairwise similarity which characterizes the local structure, and 
@@ -284,6 +298,8 @@ George B. Mertzios and Hendrik Molter and Rolf Niedermeier and Viktor Zamaraev a
 \bibitem{softmax}
 Bolin Gao and Lacra Pavel, \emph{On the Properties of the Softmax Function with Application in Game
 Theory and Reinforcement Learning}, CoRR, 2017
+\bibitem{node2vec}
+Aditya Grover and Jure Leskovec \emph{node2vec: Scalable Feature Learning for Networks}, CoRR, 2016
 \bibitem{EmbeddingSummary}
 Primož Godec \emph{Graph Embeddings — The Summary}\\
 https://towardsdatascience.com/graph-embeddings-the-summary-cc6075aba007
