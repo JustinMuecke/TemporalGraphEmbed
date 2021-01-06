@@ -142,62 +142,63 @@ how it can change over time and what is meant when we talk about embedding.
 
 
 \subsection{Graphs}
-
 A graph is a mathematical construct which is used in a variety of tasks. It is often used to model relationships between 
 entities, thus making it possible to operate on such structures to, for example, analyze them.\\
 \begin{figure}[h]
   \begin{center}
-\begin{tikzpicture}
-  \draw (0,-0.5) node [circle,inner sep=0pt,draw] {EO};
-  \draw (1.75,-1) node [circle,inner sep=0pt,draw] {JM};
-  \draw (0.5,-2) node [circle,inner sep=0pt,draw] {OK};
-  \draw (3,-0.5) node [circle,inner sep=0pt,draw] {YH};
-  \draw (2.75,-1.75) node [circle,inner sep=0pt,draw] {PB};
+    \begin{tikzpicture}
+      \draw (0,-0.5) node [circle,inner sep=0pt,draw] {EO};
+      \draw (1.75,-1) node [circle,inner sep=0pt,draw] {JM};
+      \draw (0.5,-2) node [circle,inner sep=0pt,draw] {OK};
+      \draw (3,-0.5) node [circle,inner sep=0pt,draw] {YH};
+      \draw (2.75,-1.75) node [circle,inner sep=0pt,draw] {PB};
 
-  \draw (0.27, -0.56) -- (1.49, -0.95);
-  \draw (1.55, -1.17) -- (0.7, -1.8);
-  \draw (2, -0.95) -- (2.75, -0.65);
-  \draw (1.95, -1.17) -- (2.55, -1.6);
-\end{tikzpicture}
+      \draw (0.27, -0.56) -- (1.49, -0.95);
+      \draw (1.55, -1.17) -- (0.7, -1.8);
+      \draw (2, -0.95) -- (2.75, -0.65);
+      \draw (1.95, -1.17) -- (2.55, -1.6);
+    \end{tikzpicture}
 \end{center}
-\caption{Part of the follower-relationship-graph of personal Instagram account}
+\caption{Part of the follower-relationship-graph of personal Instagram account.}
 \end{figure}
-
-
  Mathematically it is consisting of two sets \(G = (V, E)\), where V consists of all the vertices of the Graph, and E of all the edges, represented through a tuple of two vertices.
  Our graph above would thus look like following: \\
  \( G_i = (\{E,O,Y,P,J\}, \{(J,E),(J,O), (J,P), (J,Y)\}) \).
 
 \subsection{Temporal Graphs}
-As we want to embed not just graphs, but temporal graph, lets bring in the temporal aspect. Let's imagine a camera that makes a picture of the graph everytime a certain 
-amount of time passed, so we get our Graphs \(G_1\) after the first picture and so on. We then take all of our pictures and put them together into one construct, 
-thus creating our temporal graph \(G = \{G_1, G_2,\ldots ,G_t\}\) consisting of many other graphs.\cite{temporalGraphs}
+A temporal graph, on the other hand, is a graph that changes its structure over time. This happens when either one of our sets \((V,E)\) changes. %%Zweiter Satz zu umgs.
+Our graph \(G\) is then represented through \(G = \{g_1, g_2, \ldots, g_t\}\) where \(g_i\) is the static graph after time \(i*\Delta t\).
+\cite{temporalGraphs}
+%TODO Evtl noch erweitern
+
 
 \subsection{Embedding}
-Our goal is, as previously mentioned, to analyze those temporal graphs, but graphs as mathematical structure are rather hard to compute with. 
-Thus, we want to transform it into a more accessible structure. For that we now try to transfer the information, that is modeled by the graph, into a vector space.
-Those Vectors have to capture the graph topology, the vertex-to-vertex relationship as well as other relevant information. Overall we can divide graph embedding techniques into two 
-categories; vertex embedding and graph embedding. When using vertex embedding, we create for each vertex its own vector representation. This is used when we want to perform predicition 
-on a node level.
-
-When using graph embedding, on the other hand, we create one vector representation of the whole graph. Most useful is this method when we want to analyze our data on a graph level e.g.
+Embedding is a process in which the graph \(G = (V_g, E_g)\) is transformed into a set of vectors \(V\).
+These capture the graph topology, vertex-to-vertex relationship as well as other relevant information.
+This way, it is more accessible for analyzing the graph and comparing it to others.
+Overall we can divide graph embedding techniques into two categories; 
+vertex embedding and graph embedding. \\
+When using vertex embedding, there has to be one vector \(v\) for each node in \(G\), so that \(|V| = |V_g|\). This is used to make prediction 
+on a node level.\\
+When using graph embedding, there is one vector representing the whole graph. Most useful is this method to analyze the data on a graph level e.g.
 comparing two graph structures with each other.\\
-To better understand how these methods are working we are now going to look at a few examples
+In order to achieve this transformation there are several methods available.
+
 \subsubsection{Word2Vec}
-First lets take a look at the word2vec algorithm. This is used as the basis of many other embedding algorithms.
-The goal hereby is, that words that are similar to each other get a similar vector representation, and that the text can be represented solely through our vectors.
-To achieve this, we start by training a neural network over a sample text. This neural network consists of one input-, one hidden- and one output layer. 
-We then train this network to detect how likely it is to have two words in one neighborhood. Here, a neighborhood contains the word in question as well as
-all words that are either in a fixed distance before or after it. A classical distance for this window is 5.
-As input, we use a one-hot code of all the words in our test file, e.g. the first word has a vector of \((1, 0,\ldots ,0)\), and as output we use a softmax vector to 
-describe the probability of the words being next to the starting word. With this achievement we can now satisfy our problem conditions, because we now have all the information 
-from the text assembled in multiple vectors.
+The first method is word2vec which is the foundation for many other methods. 
+It takes a text \(T = (w_1, w_2, \ldots, w_n)\) as input and returns a set of vectors\(V\), where \(v_i\) is a distribution describing how likely it is for each word 
+to be a direct neighbor to it. The neighbors of a word \(w_c\) are defined as \(\{w_i | i \in (c-\epsilon, c+\epsilon)\}\) where \(\epsilon\) describes a predefined window size.
+With this, the whole text it represented solely through vectors, where similar words have similar vectors.
+One way to achieve this is to train a neural network to create the distributions. This neural network consists of one input-, one hidden- and one output layer. 
+Each word in our text is assigned an ID through a one-hot coded vector, so that each word \(w_i\) can be represented like \((0_1, 0_2, \ldots, 0_{i-1}, 1_i, 0_{i+1}, \ldots 0_n)\).
+It then computes how likely it is for each word to be its neighbor and transforms it into a distribution using a softmax-function\cite{softmax}.
+
+
 
 \begin{figure}[h]
   \begin{center}
     \scalebox{0.8}{
     \begin{tikzpicture}
-
       \draw (0,0) rectangle (2,1) node[pos=.5] {Philosopers};  
       \draw (2,0) rectangle (3,1) node[pos=.5] {have};  
       \draw [fill=gray](3,0) rectangle (4.5,1) node[pos=.5] {debated};  
@@ -222,23 +223,23 @@ from the text assembled in multiple vectors.
       \draw (4.5,4.5) rectangle (6,5.5) node[pos=.5] {Hume's};  
       \draw (6,4.5) rectangle (7.5,5.5) node[pos=.5] {problem}; 
 
-  \end{tikzpicture}}
-\end{center}
-\caption{The light gray words are our Input and the dark-gray words our neighbors for a window size of 1}
+    \end{tikzpicture}}
+  \end{center}
+  \caption{Light-gray word, with dark-gray neighbor and \(\epsilon = 1\)}
 \end{figure}
 
-\subsubsection*{DeepWalk}
+\subsubsection{DeepWalk}
 This method is a continuation of the word2vec approach. 
 Overall, the method consists of three steps. First the sampling, which is done using random walks on our graph starting on a selected node.
 Hereby, a random walk describes a random succession of nodes of defined length. It is sufficient to perform 32 to 64 random Walks per node.
 Those random walks are now of the same form as sentences used in the word2vec method, meaning we can train a similar neural network for predicting
 the neighborhood of our nodes.
 
-\subsubsection*{Node2Vec}
+\subsubsection{Node2Vec}
 Here we modify our DeepWalk method. For that purpose we introduce 2 variables \(P\) and \(Q\), where \(Q\) defines how likely it is to go to an unvisited node,
 while \(P\) describes how probable it is to revisit a node.
 
-\subsubsection*{Structural Deep Network Embedding}
+\subsubsection{Structural Deep Network Embedding}
 In contrast to the methods used before, SDNE does not use random walks. It aims to preserve local pairwise similarity which characterizes the local structure, and 
 as well as the global network structure.
 To achieve this, we use two autoencoder neural network. These get an adjacency vector as input and want to construct node adjacency as output.
@@ -246,7 +247,7 @@ We then compute the distance between the two outputs and add it to the loss func
 The total loss function is then computed through summation of the distance loss plus the losses of the two encoders.
 At the end we remain with a collection of adjacency vectors which describe the graph structure.
 
-\subsubsection*{Graph2Vec}
+\subsubsection{Graph2Vec}
 Now we don't want to represent the nodes as vectors, but the whole graph. For that we have once again three steps. 
 In the first step we create sub-graphs for each node and encode then once again in a one-hot code. We then use these sub-graphs to train the network used in 
 word2vec to maximize the probability that a predicted sup-graph exists in the input graph. The embedding is then the result of the network.
@@ -280,6 +281,9 @@ Where does it differ
 George B. Mertzios and Hendrik Molter and Rolf Niedermeier and Viktor Zamaraev and Philipp Zschoche,
 \emph{Computing Maximum Matchings in Temporal Graphs},
 37th International Symposium on Theoretical Aspects of Computer Science (STACS 2020), 2020
+\bibitem{softmax}
+Bolin Gao and Lacra Pavel, \emph{On the Properties of the Softmax Function with Application in Game
+Theory and Reinforcement Learning}, CoRR, 2017
 \bibitem{EmbeddingSummary}
 Primož Godec \emph{Graph Embeddings — The Summary}\\
 https://towardsdatascience.com/graph-embeddings-the-summary-cc6075aba007
