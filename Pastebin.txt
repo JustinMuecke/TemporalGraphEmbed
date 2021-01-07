@@ -1,0 +1,33 @@
+\begin{thebibliography}{1}
+
+\bibitem{temporalGraphs}
+George B. Mertzios and Hendrik Molter and Rolf Niedermeier and Viktor Zamaraev and Philipp Zschoche,
+\emph{Computing Maximum Matchings in Temporal Graphs},
+37th International Symposium on Theoretical Aspects of Computer Science (STACS 2020), 2020
+\bibitem{softmax}
+Bolin Gao and Lacra Pavel, \emph{On the Properties of the Softmax Function with Application in Game
+Theory and Reinforcement Learning}, CoRR, 2017
+\bibitem{node2vec}
+Aditya Grover and Jure Leskovec \emph{node2vec: Scalable Feature Learning for Networks}, CoRR, 2016
+\bibitem{EmbeddingSummary}
+Primož Godec \emph{Graph Embeddings — The Summary}\\
+https://towardsdatascience.com/graph-embeddings-the-summary-cc6075aba007
+Dec 31, 2018
+\bibitem{sub2vec}
+\bibitem{tdGraphEmbed: Temporal Dynamic Graph-Level Embedding}
+Moran Beladev, Lior Rokach, Gilad Katz, Ido Guy, Kira Radinsky, \emph{tdGraphEmbed: Temporal Dynamic Graph-Level Embedding}, {CIKM} '20: The 29th {ACM} International Conference on Information and Knowledge Management, Virtual Event, Ireland, October 19-23, 2020
+
+\end{thebibliography}
+
+
+{
+	"resource": "/C:/Users/Doo5i/Documents/git/TemporalGrpahEmbed/TemporalGraphEmbedding.tex",
+	"owner": "LaTeX",
+	"severity": 8,
+	"message": "Paragraph ended before \\@citex was complete.\n<to be read again> \n",
+	"source": "LaTeX",
+	"startLineNumber": 305,
+	"startColumn": 1,
+	"endLineNumber": 305,
+	"endColumn": 65536
+}

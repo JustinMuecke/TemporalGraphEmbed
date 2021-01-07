@@ -136,7 +136,9 @@
 \maketitle
 
 \section{Introduction}
+ML finden Graphen ganz blöd! Drum machen wir jetzt vektoren \(uwu\)
 
+\section{Preliminary}
 To start this paper out, let's first create a level playing field for all readers by laying out what exactly a Graph is, 
 how it can change over time and what is meant when we talk about embedding.
 
@@ -169,7 +171,7 @@ entities, thus making it possible to operate on such structures to, for example,
 \subsection{Temporal Graphs}
 A temporal graph, on the other hand, is a graph that changes its structure over time. This happens when either one of our sets \((V,E)\) changes. %%Zweiter Satz zu umgs.
 Our graph \(G\) is then represented through \(G = \{g_1, g_2, \ldots, g_t\}\) where \(g_i\) is the static graph after time \(i*\Delta t\).
-\cite{temporalGraphs}
+\cite{DBLP:journals/corr/abs-1905-05304}
 %TODO Evtl noch erweitern
 
 
@@ -192,7 +194,7 @@ to be a direct neighbor to it. The neighbors of a word \(w_c\) are defined as \(
 With this, the whole text is represented solely through vectors, where similar words have similar vectors.
 One way to achieve this, is to train a neural network to create the distributions. This neural network consists of one input-, one hidden- and one output layer. 
 Each word in our text is assigned an ID through a one-hot coded vector, so that each word \(w_i\) can be represented like \((0_1, 0_2, \ldots, 0_{i-1}, 1_i, 0_{i+1}, \ldots 0_n)\).
-It then computes how likely it is for each word to be its neighbor and transforms it into a distribution using a softmax-function\cite{softmax}.
+It then computes how likely it is for each word to be its neighbor and transforms it into a distribution using a softmax-function\cite{gao2018properties}.
 \begin{figure}[h]
   \begin{center}
     \scalebox{0.8}{
@@ -251,7 +253,7 @@ An order for the random walk is defined through two parameters \(p\) and \(q\). 
 with \(d_{xy}\) being the shortest path between nodes \(x\) and \(y\).
 Hereby, our parameter \(p\) defines how likely it is to revisit a node of the walk. Setting \(p\) to a higher value encourages the walk to go deeper into the graph, whereas a small value 
 ensures the walk to stay local around the starting point. 
-In contrast, \(q\) describes the preference of nearer or further nodes. For \(q > 1\) the walk favors closer nodes, for \(q < 1\) nodes that are further away.\cite{node2vec}
+In contrast, \(q\) describes the preference of nearer or further nodes. For \(q > 1\) the walk favors closer nodes, for \(q < 1\) nodes that are further away.\cite{Grover.03.07.2016}
 
 \subsubsection{Structural Deep Network Embedding}
 In contrast to the methods used before, SDNE does not use random walks. It aims to preserve local pairwise similarity which characterizes the local structure, and 
@@ -265,14 +267,21 @@ At the end we remain with a collection of adjacency vectors which describe the g
 Now we don't want to represent the nodes as vectors, but the whole graph. For that we have once again three steps. 
 In the first step we create sub-graphs for each node and encode then once again in a one-hot code. We then use these sub-graphs to train the network used in 
 word2vec to maximize the probability that a predicted sup-graph exists in the input graph. The embedding is then the result of the network.
-\cite{EmbeddingSummary}
-\newpage
-\section{Methods}
+\cite{Godec.31.12.2018}
 
-\subsection{tbGraphEmbed}
-Starting paper
-\subsection{sub2vec}
+\section{Embedding of Temporal Graphs}
+
+
+\subsection{tNodeEmbed}
 Is used as comparison in starting paper -> Look into
+- Embedding sumgraphs G1 G2 etc.. using cause temproal graph G = {G1, G2, ..., Gn}
+\cite{Singer.2019}
+
+
+\subsection{tdGraphEmbed}
+Starting paper
+\cite{Beladev.2020}
+
 
 \subsection{Comparison}
 How do Methods differ -> nodelevel / Graphlevel?
@@ -285,29 +294,11 @@ Differences Between graphs (exp - googletrends)
 Where does it differ
 
 \section{Conclusion}
-
 %%
 %% The next two lines define the bibliography style to be used, and
 %% the bibliography file.
-
-\begin{thebibliography}{1}
-\bibitem{temporalGraphs}
-George B. Mertzios and Hendrik Molter and Rolf Niedermeier and Viktor Zamaraev and Philipp Zschoche,
-\emph{Computing Maximum Matchings in Temporal Graphs},
-37th International Symposium on Theoretical Aspects of Computer Science (STACS 2020), 2020
-\bibitem{softmax}
-Bolin Gao and Lacra Pavel, \emph{On the Properties of the Softmax Function with Application in Game
-Theory and Reinforcement Learning}, CoRR, 2017
-\bibitem{node2vec}
-Aditya Grover and Jure Leskovec \emph{node2vec: Scalable Feature Learning for Networks}, CoRR, 2016
-\bibitem{EmbeddingSummary}
-Primož Godec \emph{Graph Embeddings — The Summary}\\
-https://towardsdatascience.com/graph-embeddings-the-summary-cc6075aba007
-Dec 31, 2018
-\bibitem{tdGraphEmbed: Temporal Dynamic Graph-Level Embedding}
-Moran Beladev, Lior Rokach, Gilad Katz, Ido Guy, Kira Radinsky, \emph{tdGraphEmbed: Temporal Dynamic Graph-Level Embedding}, {CIKM} '20: The 29th {ACM} International Conference on Information and Knowledge Management, Virtual Event, Ireland, October 19-23, 2020
-
-\end{thebibliography}
+\bibliographystyle{IEEEtr}
+\bibliography{citation}
 %% If your work has an appendix, this is the place to put it.
 
 \end{document}
