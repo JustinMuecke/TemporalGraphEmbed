@@ -244,7 +244,7 @@ The result is a set of vectors \(V\) where each vector \(v_i\) is a distribution
 
 \subsubsection{Node2Vec}
 This is an optimized version of DeepWalk.
-Again, there is the sampling phase in the beginning. The difference in the methods is, that in Node2Vec the random walks are now biased and not completely random.
+Again, there is the sampling phase in the beginning. The difference in the methods is, that in node2vec the random walks are now biased and not completely random.
 An order for the random walk is defined through two parameters \(p\) and \(q\). To evaluate which node to visit next the walk looks at the transition probability
 \(\pi_{xy}\) on the edge \((x,y)\). This probability is now defined as \(\pi_{xy} = \alpha_{pq}(x, y) * w_{xy}\) where \(w_{xy}\) is the weight assigned to the edge \((x,y)\) and:
 \begin{center}
@@ -272,7 +272,7 @@ word2vec to maximize the probability that a predicted sup-graph exists in the in
 
 
 \section{Embedding of Temporal Graphs}
-Let \(G = (V,E)\) be a temporal graph with \(G_t=\{G_{t_1}, \ldots,G_{t_T}\} \) as its evolution over the time \(T\).
+Let \(G = (V,E)\) be a temporal graph with \(G_t=\{G_{t_1}, \ldots,G_{t_T}\} \) as its evolution over the time steps \(T\).
 The goal is now, to create a vector space which can be used to analyze the graph to find anomalies in it, compare it to other graphs, classify nodes or predict if 
 certain links are going to exist.
 Depending on which outcome is wanted, different methods have to be used to optimize it. For predictions on the node level like node classification and link prediction a node-level algorithm should be used. 
@@ -282,12 +282,14 @@ On the other hand, a graph-level algorithm should be used to compare graphs with
 As aforementioned, a node-level algorithm should be used to perform e.g. link predictions and node classification. 
 One proposed algorithm of that form is \emph{tNodeEmbed}. Here, the embedding can be split into three parts: 
 %% Work up: initialisierung -> auslenkung -> zusammenfassung
-\subsubsection{Initialzation}
-To start out, the algorithm initializes a representative vector \(Q_t \in \mathbb{R}^{T \times d}\) for each node \(v\) in all graphs \(G_{t_1}, \ldots, G_{t_T} \), where d is the embedding size, and T the number of time steps.
+\subsubsection{Initialization}
+To start out, the algorithm initializes a representative vector \(Q_t \in \mathbb{R}^{T \times d}\) for each node \(v\) in all graphs \(G_{t_1}, \ldots, G_{t_T} \), where \(d\) is the embedding size, and \(T\) the number of time steps.
 These vectors are created using the node2vec algorithm discussed in 2.3.3.
 
+\subsubsection{Node alignment}
+%Vektors are being combined into matrizes and then rotated to align
 
-
+\subsubsection{Finalization}
 
 \subsubsection*{IGNORE FOR NOW}
 The algorithm works in such a way, that the only difference in the algorithm, between the two outcomes, is the loss function. 
