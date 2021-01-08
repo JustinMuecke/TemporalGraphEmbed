@@ -172,7 +172,7 @@ entities, thus making it possible to operate on such structures to, for example,
 A temporal graph, on the other hand, is a graph that changes its structure over time. This happens when either one of our sets \((V,E)\) changes. %%Zweiter Satz zu umgs.
 Our graph \(G\) is then represented through \(G = \{g_1, g_2, \ldots, g_t\}\) where \(g_i\) is the static graph after time \(i*\Delta t\).
 \cite{DBLP:journals/corr/abs-1905-05304}
-%TODO Evtl noch erweitern
+%Umschreiben G={G1.... Gn} ist evolution des graphen
 
 
 \subsection{Embedding}
@@ -269,12 +269,17 @@ In the first step we create sub-graphs for each node and encode then once again 
 word2vec to maximize the probability that a predicted sup-graph exists in the input graph. The embedding is then the result of the network.
 \cite{Godec.31.12.2018}
 
-\section{Embedding of Temporal Graphs}
 
+
+\section{Embedding of Temporal Graphs}
+Let \(G = (V,E)\) be a temporal graph with \(G_t=\{G_{t_1}, \ldots,G_{t_T}\} \) as its evolution over the time \(T\).
+The Goal is now, to create a vector space which can be used to analyze the graph to find anomalies in it, compare it to other graphs, classify nodes or predict if 
+certain links are going to exist.
+Depending on which outcome is wanted, different Methods have to be used to optimize the outcome. For predictions on the node level like node classification and link prediction a node-level algorithm should be used. 
+On the other hand, a graph-level algorithm should be used to compare graphs with each other and to find anomalies.
 
 \subsection{tNodeEmbed}
-Is used as comparison in starting paper -> Look into
-- Embedding sumgraphs G1 G2 etc.. using cause temproal graph G = {G1, G2, ..., Gn}
+
 \cite{Singer.2019}
 
 
