@@ -273,12 +273,34 @@ word2vec to maximize the probability that a predicted sup-graph exists in the in
 
 \section{Embedding of Temporal Graphs}
 Let \(G = (V,E)\) be a temporal graph with \(G_t=\{G_{t_1}, \ldots,G_{t_T}\} \) as its evolution over the time \(T\).
-The Goal is now, to create a vector space which can be used to analyze the graph to find anomalies in it, compare it to other graphs, classify nodes or predict if 
+The goal is now, to create a vector space which can be used to analyze the graph to find anomalies in it, compare it to other graphs, classify nodes or predict if 
 certain links are going to exist.
-Depending on which outcome is wanted, different Methods have to be used to optimize the outcome. For predictions on the node level like node classification and link prediction a node-level algorithm should be used. 
-On the other hand, a graph-level algorithm should be used to compare graphs with each other and to find anomalies.
+Depending on which outcome is wanted, different methods have to be used to optimize it. For predictions on the node level like node classification and link prediction a node-level algorithm should be used. 
+On the other hand, a graph-level algorithm should be used to compare graphs with each other and to find anomalies, as shown in 3.3.
 
 \subsection{tNodeEmbed}
+As aforementioned, a node-level algorithm should be used to perform e.g. link predictions and node classification. 
+One proposed algorithm of that form is \emph{tNodeEmbed}. Here, the embedding can be split into three parts: 
+%% Work up: initialisierung -> auslenkung -> zusammenfassung
+\subsubsection{Initialzation}
+To start out, the algorithm initializes a representative vector \(Q_t \in \mathbb{R}^{T \times d}\) for each node \(v\) in all graphs \(G_{t_1}, \ldots, G_{t_T} \), where d is the embedding size, and T the number of time steps.
+These vectors are created using the node2vec algorithm discussed in 2.3.3.
+
+
+
+
+\subsubsection*{IGNORE FOR NOW}
+The algorithm works in such a way, that the only difference in the algorithm, between the two outcomes, is the loss function. 
+For the node classification task it uses a categorical cross-entropy loss:
+\begin{center}
+ \(L_{task} = -\sum_{v\in V} \log {Pr(class(v)|f_T(v))}\)
+\end{center}
+For the link prediction task it considers a binary classification loss: 
+\begin{center}
+  \(L_{task} = -\sum_{v_1, v_2 \in V} \log{Pr((v_1,v_2)\in E | g(f_T(v_1), f_T(v_2)))}\)
+\end{center}
+
+
 
 \cite{Singer.2019}
 
