@@ -76,7 +76,9 @@
 %% the next command will enable that style.
 %%\citestyle{acmauthoryear}
 \usepackage{tikz}
-
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
 %%
 %% end of the preamble, start of the body of the document source.
 \begin{document}
@@ -288,6 +290,24 @@ These vectors are created using the node2vec algorithm discussed in 2.3.3.
 
 \subsubsection{Node alignment}
 %Vektors are being combined into matrizes and then rotated to align
+A downside to node2vec is that, when running on a graph, it aims to minimize the word embedding distances but not consistency over multiple trainings.
+The resulting embedding could be in a two-dimensional space for example. It lays in a x-y-plane. Now imagine a rotation around the unused z-axis. The resulting graphs have the
+same structure but different orientation in the plan, thus not having an alignment, as seen in figure 3.
+%Besser ausführen -> Bildchen
+\begin{figure}
+\includegraphics[scale=0.1]{UnalignedGraphs.png}
+\caption{a) graph desrcibed by first embedding. b) graph described by second embedding. The red node do not align even though the graph structure is the same.}
+\end{figure}
+Similarly, when embedding two graphs \(G_{t_i}\) and \(G_{t_j}\) it is not guaranteed that, even if the graphs are identical, their axes align.
+To adjust those embeddings, tNodeEmbed uses an orthogonal transformation between embeddings at two time points \(t_i\) and \(t_j\)\cite{Schonemann.1966}.
+Used in this algorithm, it takes the matrix \(Q_t \in \mathbb{R}^{d\times |V|}\) of node embeddings at time \(t\). Then the matrices get aligned iteratively starting from the earliest timestep.
+For the alignment an orthogonal matrix \(R\) between \(Q_t\) and \(Q_{t+1}\) is needed to result in the final embedding \(Q'_t = RQ_t\).
+The matrix are is approximated by : 
+\begin{center}
+  \(R_{t+1} = \argmin_{R s.t. R^TR =I} \|RQ_{t+1} - Q_t\| \)
+\end{center}
+where \(R_{t+1} \in \mathbb{R}^{d \times d} \) is the transformation which fits the time steps the most.
+
 
 \subsubsection{Finalization}
 
@@ -312,14 +332,14 @@ Starting paper
 \cite{Beladev.2020}
 
 
-\subsection{Comparison}
+\section{Comparison}
 How do Methods differ -> nodelevel / Graphlevel?
 
-\subsection{Application}
+\section{Application}
 Why do we use Embedding
-\subsubsection{Similarity}
+\subsection{Similarity}
 Differences Between graphs (exp - googletrends)
-\subsubsection{Anomaly}
+\subsection{Anomaly}
 Where does it differ
 
 \section{Conclusion}
