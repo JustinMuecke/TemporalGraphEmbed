@@ -328,7 +328,7 @@ The function is defined recursively as:
 with \(A,B,R_t\) and \(Q_t\) being matrices, \(v\) again being a one-hot vector representing a node and \(\sigma\) being an activation funcion.
 The final temporal embedding is now defined as the minimization of the loss-function:
 \begin{center}
-  \( L = \min_{A,B,Q_1, \ldots Q_T,R2, \ldots RT} L_{task}\).
+  \( L = \min_{A,B,Q_1, \ldots Q_T,R2, \ldots, RT} L_{task}\).
 \end{center}
 Now, it is only a Question on how to define \(A,B\) and \(\sigma\).
 Due to the steps beforehand, each node is associated with a matrix \(X^{(v)} \in \mathbb{R}^{T \times d}\) consisting of 
@@ -342,9 +342,6 @@ For this it is proposed to use recurrent neural networks with long short term me
 Starting paper
 \cite{Beladev.2020}
 
-
-\section{Comparison}
-How do Methods differ -> nodelevel / Graphlevel?
 
 \section{Application}
 Why do we use Embedding
