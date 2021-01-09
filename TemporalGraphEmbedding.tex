@@ -292,12 +292,9 @@ These vectors are created using the node2vec algorithm discussed in 2.3.3.
 %Vektors are being combined into matrizes and then rotated to align
 A downside to node2vec is that, when running on a graph, it aims to minimize the word embedding distances but not consistency over multiple trainings.
 The resulting embedding could be in a two-dimensional space for example. It lays in a x-y-plane. Now imagine a rotation around the unused z-axis. The resulting graphs have the
-same structure but different orientation in the plan, thus not having an alignment, as seen in figure 3.
+same structure but different orientation in the plane, thus not having an alignment, as seen in figure 3.
 %Besser ausführen -> Bildchen
-\begin{figure}
-\includegraphics[scale=0.1]{UnalignedGraphs.png}
-\caption{a) graph desrcibed by first embedding. b) graph described by second embedding. The red node do not align even though the graph structure is the same.}
-\end{figure}
+
 Similarly, when embedding two graphs \(G_{t_i}\) and \(G_{t_j}\) it is not guaranteed that, even if the graphs are identical, their axes align.
 To adjust those embeddings, tNodeEmbed uses an orthogonal transformation between embeddings at two time points \(t_i\) and \(t_j\)\cite{Schonemann.1966}.
 Used in this algorithm, it takes the matrix \(Q_t \in \mathbb{R}^{d\times |V|}\) of node embeddings at time \(t\). Then the matrices get aligned iteratively starting from the earliest timestep.
@@ -307,11 +304,12 @@ The matrix are is approximated by :
   \(R_{t+1} = \argmin_{R s.t. R^TR =I} \|RQ_{t+1} - Q_t\| \)
 \end{center}
 where \(R_{t+1} \in \mathbb{R}^{d \times d} \) is the transformation which fits the time steps the most.
-
+\begin{figure}[h]
+  \includegraphics[scale=0.1]{UnalignedGraphs.png}
+  \caption{a) graph described by first embedding. b) graph described by second embedding. The red node do not align even though the graph structure is the same.}
+\end{figure}
 
 \subsubsection{Finalization}
-
-\subsubsection*{IGNORE FOR NOW}
 The algorithm works in such a way, that the only difference in the algorithm, between the two outcomes, is the loss function. 
 For the node classification task it uses a categorical cross-entropy loss:
 \begin{center}
@@ -321,9 +319,22 @@ For the link prediction task it considers a binary classification loss:
 \begin{center}
   \(L_{task} = -\sum_{v_1, v_2 \in V} \log{Pr((v_1,v_2)\in E | g(f_T(v_1), f_T(v_2)))}\)
 \end{center}
-
-
-
+The Algorithm now wants to learn a function \(F_T\) so that \(f_T(v) = F_T(v,G_1, \ldots, G_T)\) that optimizes for \(L_Task\).
+The function is defined recursively as: 
+\begin{center}
+  \(f_{t+1} = \sigma(Af_t(v) + BQ_tR_tv)\) \\
+  and \(f_0(v) = \vec{0}\)
+\end{center}
+with \(A,B,R_t\) and \(Q_t\) being matrices, \(v\) again being a one-hot vector representing a node and \(\sigma\) being an activation funcion.
+The final temporal embedding is now defined as the minimization of the loss-function:
+\begin{center}
+  \( L = \min_{A,B,Q_1, \ldots Q_T,R2, \ldots RT} L_{task}\).
+\end{center}
+Now, it is only a Question on how to define \(A,B\) and \(\sigma\).
+Due to the steps beforehand, each node is associated with a matrix \(X^{(v)} \in \mathbb{R}^{T \times d}\) consisting of 
+all embeddings \(T\), which are of size\(d\), thus the whole graph can be seen as \(G_X = X^{(v_1)},\ldots, X^{(v_{|V|})}\).
+To perform the wanted graph-prediction tasks, the matrices representing each node now need to be reduced into a single vector, so it can be used as input for a classifier, as in the static embeddings.
+For this it is proposed to use recurrent neural networks with long short term memory.
 \cite{Singer.2019}
 
 
