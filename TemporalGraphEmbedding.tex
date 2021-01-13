@@ -118,7 +118,10 @@
 %% The abstract is a short summary of the work to be presented in the
 %% article.
 \begin{abstract}
-  
+ This paper discusses different methods for temporal graph embedding. It first gives a basic description on graphs itself and then shows basic methods for embedding static graphs,
+ like word2vec, random walks, DeepWalk, node2vec, structural deep network embedding and graph2vec. Then it is discussed how these static methods can be modified to apply them onto temporal graphs. 
+ For this purpose, there are shown two different methods: tNodeEmbed, which is based on node2vec, and tdGraphEmbed, which is based on random walks. 
+ Furthermore, there are a few examples on how to use such embedded graphs.
 \end{abstract}
 
 
@@ -138,7 +141,15 @@
 \maketitle
 
 \section{Introduction}
-ML finden Graphen ganz blöd! Drum machen wir jetzt vektoren \(uwu\)
+With the surge of social networks like facebook, twitter and instagram, huge and quickly changing social networks became a part of the everyday life of most people.
+The goal of this paper is to show, how those networks can be analyzed and which predictions can be made from the data that is available.
+This analysis can be done using so-called \emph{temporal graph embedding}. Here, a graph gets transformed into either a vector field, with one vector describing one node out of the graph, or
+the graph at a time \(t\) in its evolution. 
+With these vectors, it is easier to train neural networks, as graphs are too complex of a structure for them. These can then be, in turn used to perform tasks like: node prediction, where the focus lies on prediction if an edge will form between two nodes and
+node classification, with which nodes that share attributes can be labeled.
+As there are different methods on how to achieve such an embedding of graphs into sets of vectors, this paper focuses on giving a quick overview over the basic approaches with non-temporal graphs, to lay down a groundwork. These methods can be used in a modified way to 
+also work with temporal graphs. How two methods for temporal graphs work is shown in section 3 of this paper.
+To finish of, in section 4, different applications for embedded temporal graphs are shown.
 
 \section{Preliminary}
 To start this paper out, let's first create a level playing field for all readers by laying out what exactly a Graph is, 
@@ -192,11 +203,12 @@ In order to achieve this transformation there are several methods available.
 \subsubsection{Word2Vec}
 The first method is word2vec which is the foundation for many other methods. 
 It takes a text \(T = (w_1, w_2, \ldots, w_n)\) as input and returns a set of vectors\(V\), where \(v_i\) is a distribution describing how likely it is for each word 
-to be a direct neighbor to it. The neighbors of a word \(w_c\) are defined as \(\{w_i | i \in (c-\epsilon, c+\epsilon)\}\) where \(\epsilon\) describes a predefined window size.
+to be a direct neighbor to it. The neighbors of a word \(w_c\) are defined as \(\{w_i | i \in (c-\epsilon, c+\epsilon)\}\) where \(\epsilon\) describes a predefined window size as seen in figure 2.
 With this, the whole text is represented solely through vectors, where similar words have similar vectors.
 One way to achieve this, is to train a neural network to create the distributions. This neural network consists of one input-, one hidden- and one output layer. 
 Each word in our text is assigned an ID through a one-hot coded vector, so that each word \(w_i\) can be represented like \((0_1, 0_2, \ldots, 0_{i-1}, 1_i, 0_{i+1}, \ldots 0_n)\).
-It then computes how likely it is for each word to be its neighbor and transforms it into a distribution using a softmax-function\cite{gao2018properties}.
+It then computes how likely it is for each word to be its neighbor and transforms it into a distribution using a softmax-function.
+\cite{gao2018properties}
 \begin{figure}[h]
   \begin{center}
     \scalebox{0.8}{
@@ -229,6 +241,8 @@ It then computes how likely it is for each word to be its neighbor and transform
   \end{center}
   \caption{Light-gray word, with dark-gray neighbor and \(\epsilon = 1\).}
 \end{figure}
+\cite{Godec.31.12.2018}
+
 
 \subsubsection{DeepWalk}
 This method is a continuation of the word2vec approach, but now the input is not a text, but a graph \(G = (V,E)\)
@@ -242,32 +256,36 @@ where \(\pi_{xy}\) is the probability between nodes \(x\) and \(y\) with\(Z\) as
 It is sufficient to perform \(32-64\) random walks per Node. The resulting paths are of the same structure as sentences in a text, so 
 the word2vec method can now be used on it.
 The result is a set of vectors \(V\) where each vector \(v_i\) is a distribution of the probability that two nodes are next to each other.
+\cite{Godec.31.12.2018}
 
 
 \subsubsection{Node2Vec}
 This is an optimized version of DeepWalk.
 Again, there is the sampling phase in the beginning. The difference in the methods is, that in node2vec the random walks are now biased and not completely random.
 An order for the random walk is defined through two parameters \(p\) and \(q\). To evaluate which node to visit next the walk looks at the transition probability
-\(\pi_{xy}\) on the edge \((x,y)\). This probability is now defined as \(\pi_{xy} = \alpha_{pq}(x, y) * w_{xy}\) where \(w_{xy}\) is the weight assigned to the edge \((x,y)\) and:
+\(\pi_{xy}\) on the edge \((x,y)\). This probability is now defined as \(\pi_{xy} = \alpha_{pq}(x, y) \cdot w_{xy}\) where \(w_{xy}\) is the weight assigned to the edge \((x,y)\) and:
 \begin{center}
  \(\alpha_{pq}(xy) = \begin{cases} \frac{1}{p} & \text{if } d_{xy} = 0 \\ 1 & \text{if } d_{xy} = 1 \\\frac{1}{q} & \text{if } d_{xy} = 2 \\\end{cases}\)
 \end{center}
 with \(d_{xy}\) being the shortest path between nodes \(x\) and \(y\).
 Hereby, our parameter \(p\) defines how likely it is to revisit a node of the walk. Setting \(p\) to a higher value encourages the walk to go deeper into the graph, whereas a small value 
 ensures the walk to stay local around the starting point. 
-In contrast, \(q\) describes the preference of nearer or further nodes. For \(q > 1\) the walk favors closer nodes, for \(q < 1\) nodes that are further away.\cite{Grover.03.07.2016}
+In contrast, \(q\) describes the preference of nearer or further nodes. For \(q>1\) the walk favors closer nodes, for \(q<1\) nodes that are further away.
+\cite{Grover.03.07.2016}
 
 \subsubsection{Structural Deep Network Embedding}
 In contrast to the methods used before, SDNE does not use random walks. It aims to preserve local pairwise similarity which characterizes the local structure, and 
 as well as the global network structure.
-To achieve this, we use two autoencoder neural network. These get an adjacency vector as input and want to construct node adjacency as output.
-We then compute the distance between the two outputs and add it to the loss function of the network.
-The total loss function is then computed through summation of the distance loss plus the losses of the two encoders.
-At the end we remain with a collection of adjacency vectors which describe the graph structure.
+To achieve this, two autoencoder neural networks are used. These get an adjacency vector as input and construct node adjacency vectors as output.
+Then the distance between the two outputs is computed and added to the loss function of the network.
+The total loss function is then calculated through summation of the distance loss plus the losses of the two encoders.
+At the end remains a collection of adjacency vectors which describe the graph structure.
+\cite{Godec.31.12.2018}
+
 
 \subsubsection{Graph2Vec}
-Now we don't want to represent the nodes as vectors, but the whole graph. For that we have once again three steps. 
-In the first step we create sub-graphs for each node and encode then once again in a one-hot code. We then use these sub-graphs to train the network used in 
+Now not the nodes are represented by vectors, but the whole graph. For that, there are once again three steps. 
+In the first step the algorithm creates sub-graphs for each node and encodes them once again in a one-hot code. We then use these sub-graphs to train the network used in 
 word2vec to maximize the probability that a predicted sup-graph exists in the input graph. The embedding is then the result of the network.
 \cite{Godec.31.12.2018}
 
@@ -313,11 +331,11 @@ where \(R_{t+1} \in \mathbb{R}^{d \times d} \) is the transformation which fits 
 The algorithm works in such a way, that the only difference in the algorithm, between the two outcomes, is the loss function. 
 For the node classification task it uses a categorical cross-entropy loss:
 \begin{center}
- \(L_{task} = -\sum_{v\in V} \log {Pr(class(v)|f_T(v))}\)
+ \(L_{task} = -\sum\limits_{v\in V} \log {Pr(class(v)|f_T(v))}\)
 \end{center}
 For the link prediction task it considers a binary classification loss: 
 \begin{center}
-  \(L_{task} = -\sum_{v_1, v_2 \in V} \log{Pr((v_1,v_2)\in E | g(f_T(v_1), f_T(v_2)))}\)
+  \(L_{task} = -\sum\limits_{v_1, v_2 \in V} \log{Pr((v_1,v_2)\in E | g(f_T(v_1), f_T(v_2)))}\)
 \end{center}
 The Algorithm now wants to learn a function \(F_T\) so that \(f_T(v) = F_T(v,G_1, \ldots, G_T)\) that optimizes for \(L_Task\).
 The function is defined recursively as: 
@@ -328,7 +346,7 @@ The function is defined recursively as:
 with \(A,B,R_t\) and \(Q_t\) being matrices, \(v\) again being a one-hot vector representing a node and \(\sigma\) being an activation funcion.
 The final temporal embedding is now defined as the minimization of the loss-function:
 \begin{center}
-  \( L = \min_{A,B,Q_1, \ldots Q_T,R2, \ldots, RT} L_{task}\).
+  \( L = \min\limits_{A,B,Q_1, \ldots Q_T,R2, \ldots, RT} L_{task}\).
 \end{center}
 Now, it is only a Question on how to define \(A,B\) and \(\sigma\).
 Due to the steps beforehand, each node is associated with a matrix \(X^{(v)} \in \mathbb{R}^{T \times d}\) consisting of 
@@ -337,20 +355,79 @@ To perform the wanted graph-prediction tasks, the matrices representing each nod
 For this it is proposed to use recurrent neural networks with long short term memory.
 \cite{Singer.2019}
 
-
 \subsection{tdGraphEmbed}
-Starting paper
-\cite{Beladev.2020}
+The goal of this algorithm is to create a mapping function that embeds a graph \(G_t\) into a \(d-\)dimensional space \(\mathbb{R}^d\) with \(d \in \mathbb{Z}\).
+This embedding captures not only the nodes' evolution over time, but also the graphs structure. Additionally, graphs with a similar structure have an embedding close to each other.
+To achieve this, the algorithm follows these steps:
+\subsubsection{Random Walks}
+The algorithm uses random walks \(W\), as described in 2.3.2, to sample the graphs. Using these random walks, the algorithm estimates the likelihood of the graph
+at time \(t\) being completely described through them. This likelihood is defined as:
+\begin{center}
+  \(Pr(G_t|W_{v_1}, W_{v_2},\ldots, W_{v_k}))\)
+\end{center}
+with \(v_1, v_2, \ldots, v_k \ in V_t\).
+Such random walks are initiated \(\gamma\) times for each node in \(V_t \in G_t\).
+Those random walks are then concatenated forming a document describing the graph.
+\subsubsection{Context Nodes}
+After all the documents are formed, the algorithm predicts the next node in a random walk. 
+The nodes in a neighborhood, later referred to as context nodes, are defined as: 
+\begin{center}
+  \(N_s(v_i^t)=\{v_{i-\omega}^t, \ldots, v_{i+\omega}^t\}\).
+\end{center}
+Using these and the graph \(G_t\) the algorithm maximizes the equation: 
+\begin{center}
+  \(\log{p(v_i^t | N_s(v_i^t), G_t)}\)
+\end{center}
+The goal is to learn a \(d-\)dimensional representation \(\phi\) where \(\phi(v_i^t)\) is the mapping of node
+\(v_i \in V_t\) and \(\phi(G_t)\) the mapping of the graph. With this mapping and a soft-max function the equation above can be caluclated with: 
+\begin{center}
+  \(p(V_i^t|N_s(v_i^t), G_t) = \frac{e^{\phi(v_i^t) \cdot h}}{\sum\limits_{j \in V_t} e^{\phi(v_j^t) \cdot h}}   \)\\
+  where \(h=\sum\limits_{c \in N_s(v_i^t)} \phi(v_c^t) + \phi(G_t)\)
+\end{center}
+where \(G_t\) is the global context shared between all embeddings. This is combined with the local context of the Nodes.
+
+\subsubsection{Optimization}
+With these equations the output calculation for each random walk \(W\) can be simplified to: 
+\begin{center}
+  \(\max\limits_\phi \sum\limits_{t \in T}\sum\limits_{W\in G_t}\sum\limits_{v_i^t} -log\sum\limits_{j\in V_t} e^{\phi(v_j^t)\cdot h}\:\:\: +\phi(v_i^t \cdot h)\).
+\end{center}
+The calculating neural network is trained using gradient descent \cite{Ruder.15.09.2016}. For each step, a fixed-length context is sampled from a walk \(W\), with which the error gradient is calculated and used to update the parameters of the model.
+The last equation gets computationally expensive for large graphs, thus a negative sampling strategy is used \cite{Goldberg.15.02.2014}. To enhance the efficiency even more, 
+the algorithm only considers nodes that are active in each time step instead of all nodes in \(V\). Active nodes are those, who change one or more property over a time step.
+Even though, the optimizations influence the computation heavily, the embedding \(\phi\) is still accurate. \cite{Beladev.2020}
 
 
 \section{Application}
-Why do we use Embedding
+Nowadays, graphs are used for a variety of applications. With it comes the need to analyze such graphs. They model e.g. Protein to Protein interactions in biology, social networks in social sciences and even  so-called word co-occurence in linguistics.
+To understand and analyze those structures better, scientists have aimed to model such graphs and the interaction between different entities they contain.
+Those analytical tasks can be divided into four main groups: node classification, link prediction, clustering and visualization \cite{Goyal.2018}.
+
+\subsection{Node classification}
+A lot of the information contained in graphs can be put into different categories e.g. gender, age, demographic and political beliefs. Those categories are called labels and can be applied to nodes in a graph representing e.g. users of a social network.
+Such labels can then be used to recommend new connections between individuals, movies and music based on the interests and personalize advertisements.
+
+\subsection{Link prediction}
+Every relation in a graph describing a social network, can be described  through an edge or link. So, whenever one entity engages another, the graph changes.
+The link prediction problem defines the question, how likely it is, given a snapshot of such a social network, that members engage each other in the near future \cite{LibenNowell.op.2003}.
+Everybody has an intuitive feeling for who would follow whom. Due to the fact that they may have the same friends, live in the same city or have the same hobbies. 
+Link prediction is the attempt to make these intuitive thoughts more precise and have an underlying method on how to do so.
+
+\subsection{Clustering}
+With increasing graph size, increases the probability that two nodes share a lot of labels. 
+Clustering aims to find such nodes and generate a sub-graph out of them. Using this, e.g. users of an online social network with the same interests can be quickly found as they are members of the same sub-graph.
+It also enables to structure the network, as one can label whole sub-graphs instead of individual nodes. \cite{Ding.2001}
+
 \subsection{Similarity}
-Differences Between graphs (exp - googletrends)
+Another use for embeddings is answering the question of how alike two graphs are. The more similar the topologies of the two graphs are, the closer the embeddings are to one another. This can be used on whole graphs or to see if a graph
+contains multiple similar sub-graphs. If a sub-graph existed in another part of the graph, this information can be used to predict its evolution, as the earlier formed sub-graph can be used as reference point \cite{Beladev.2020}.
+
 \subsection{Anomaly}
-Where does it differ
+Using the evolution of temporal graphs, repeating trends can be found. With the repeating patterns it is also possible to find anomalies in the graph which to not adhere to the pattern.
+This can be used to analyze how big of an impact e.g. political decisions can have on social constructs \cite{Beladev.2020}.
 
 \section{Conclusion}
+
+
 %%
 %% The next two lines define the bibliography style to be used, and
 %% the bibliography file.
