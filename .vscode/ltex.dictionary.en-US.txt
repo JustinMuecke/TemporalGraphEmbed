@@ -2,3 +2,5 @@ autoencoder
 SDNE
 DeepWalk
 tNodeEmbed
+softmax-function
+Mücke

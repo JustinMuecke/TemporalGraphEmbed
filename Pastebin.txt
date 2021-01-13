@@ -31,3 +31,21 @@ Moran Beladev, Lior Rokach, Gilad Katz, Ido Guy, Kira Radinsky, \emph{tdGraphEmb
 	"endLineNumber": 305,
 	"endColumn": 65536
 }
+
+The goal of this paper is to show, how such networks can be analyzed and which predictions can be made from the data that is available.
+This analysis can be done using so-called \emph{temporal graph embedding}. Here, a graph gets transformed into either a vector field, with one vector describing one node out of the graph, or
+the graph at a time \(t\) in its evolution. 
+With these vectors, it is easier to train neural networks, as graphs are too complex of a structure for them. These can then be, in turn used to perform tasks like: node prediction, where the focus lies on prediction if an edge will form between two nodes and
+node classification, with which nodes that share attributes can be labeled.
+As there are different methods on how to achieve such an embedding of graphs into sets of vectors, this paper first gives an overview over the basic approaches with non-temporal graphs, to lay down a foundation. These methods can be used in a modified way to 
+also work with temporal graphs. How two methods for temporal graphs work is shown in section 3 of this paper.
+To finish of, in section 4, different applications for embedded temporal graphs are shown.
+
+
+Until recent, it was only possible to work with graphs, which do not change over time. This represented a problem as a lot of real world networks are changing over time.  
+This made the use of existing methods inefficient. To tackle this, different approaches have been proposed.
+
+But as past structures influence their successors, this way of presenting 
+networks makes its analysis inefficient. Thus, the use of temporal graphs, which capture the whole evolution, was proposed.
+
+

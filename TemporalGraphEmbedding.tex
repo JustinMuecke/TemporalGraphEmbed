@@ -118,10 +118,7 @@
 %% The abstract is a short summary of the work to be presented in the
 %% article.
 \begin{abstract}
- This paper discusses different methods for temporal graph embedding. It first gives a basic description on graphs itself and then shows basic methods for embedding static graphs,
- like word2vec, random walks, DeepWalk, node2vec, structural deep network embedding and graph2vec. Then it is discussed how these static methods can be modified to apply them onto temporal graphs. 
- For this purpose, there are shown two different methods: tNodeEmbed, which is based on node2vec, and tdGraphEmbed, which is based on random walks. 
- Furthermore, there are a few examples on how to use such embedded graphs.
+
 \end{abstract}
 
 
@@ -141,15 +138,20 @@
 \maketitle
 
 \section{Introduction}
-With the surge of social networks like facebook, twitter and instagram, huge and quickly changing social networks became a part of the everyday life of most people.
-The goal of this paper is to show, how those networks can be analyzed and which predictions can be made from the data that is available.
-This analysis can be done using so-called \emph{temporal graph embedding}. Here, a graph gets transformed into either a vector field, with one vector describing one node out of the graph, or
-the graph at a time \(t\) in its evolution. 
-With these vectors, it is easier to train neural networks, as graphs are too complex of a structure for them. These can then be, in turn used to perform tasks like: node prediction, where the focus lies on prediction if an edge will form between two nodes and
-node classification, with which nodes that share attributes can be labeled.
-As there are different methods on how to achieve such an embedding of graphs into sets of vectors, this paper focuses on giving a quick overview over the basic approaches with non-temporal graphs, to lay down a groundwork. These methods can be used in a modified way to 
-also work with temporal graphs. How two methods for temporal graphs work is shown in section 3 of this paper.
-To finish of, in section 4, different applications for embedded temporal graphs are shown.
+With the surge of Facebook, Twitter and Instagram, huge and quickly changing social networks became a part of the everyday life of most people.
+Until recent, a lot of real life networks were only representable as static graphs. In case it was necessary to look at the development of a network, the only way was to use a set of static graphs and analyze them one by one.
+Out of the inconvenience of this procedure the use of temporal graphs was proposed. These capture the whole evolution of a network in one construct, making it easier to work with them.
+%% EMBEDDING
+To make the analyzation viable, graphs get embedded into sets of vectors, to act as an accurate representation. 
+%% APPLICATIONS
+These vectors can be used to perform a variety of tasks, e.g. comparing two networks with each other.
+%% GOAL 
+The goal of this paper is to give an overview, which methods were used to analyze static graphs, and to show examples of how these were modified to work on 
+temporal graphs.
+%% SECTIONS
+In the second section will be the fundamental knowledge. The third section will tackle the problem of static graph embedding before the fourth section will show how to
+use them in a temporal context. Lastly, there will be a few examples of real world usage. 
+
 
 \section{Preliminary}
 To start this paper out, let's first create a level playing field for all readers by laying out what exactly a Graph is, 
@@ -160,7 +162,10 @@ how it can change over time and what is meant when we talk about embedding.
 \subsection{Graphs}
 A graph is a mathematical construct which is used in a variety of tasks. It is often used to model relationships between 
 entities, thus making it possible to operate on such structures to, for example, analyze them.\\
-\begin{figure}[h]
+Mathematically it is consisting of two sets \(G = (V, E)\), where V consists of all the vertices of the Graph, and E of all the edges, represented through a tuple of two vertices.
+To visualize graphs its common practice to denote nodes as circles with connections between them as edges as seen in figure 1.
+
+ \begin{figure}[h]
   \begin{center}
     \begin{tikzpicture}
       \draw (0,-0.5) node [circle,inner sep=0pt,draw] {EO};
@@ -175,20 +180,17 @@ entities, thus making it possible to operate on such structures to, for example,
       \draw (1.95, -1.17) -- (2.55, -1.6);
     \end{tikzpicture}
 \end{center}
-\caption{Part of the follower-relationship-graph of personal Instagram account.}
+\caption{Graph described through \\ \( G_i = (\{E,O,Y,P,J\}, \{(J,E),(J,O), (J,P), (J,Y)\}) \).}
 \end{figure}
- Mathematically it is consisting of two sets \(G = (V, E)\), where V consists of all the vertices of the Graph, and E of all the edges, represented through a tuple of two vertices.
- Our graph above would thus look like following: \\
- \( G_i = (\{E,O,Y,P,J\}, \{(J,E),(J,O), (J,P), (J,Y)\}) \).
 
 \subsection{Temporal Graphs}
-A temporal graph, on the other hand, is a graph that changes its structure over time. This happens when either one of our sets \((V,E)\) changes. %%Zweiter Satz zu umgs.
-Our graph \(G\) is then represented through \(G = \{g_1, g_2, \ldots, g_t\}\) where \(g_i\) is the static graph after time \(i*\Delta t\).
+A temporal graph, on the other hand, is a graph that changes its structure over time. A structural change is defined as the replacement of object in \(V\) or \(E\)  %%Zweiter Satz zu umgs.
+Our graph \(G_T\) is then represented through \(G = (V_T,E_T)\) where \(V_T\) contains every vertex and \(E_T\) every node, that is in the graph at one point.
+The Evolution of the graph is defined as \(G_{E_T} = \{G_1, \ldots, G_T\}\). Here \(g_i\) is the static graph after time \(i*\Delta t\).
 \cite{DBLP:journals/corr/abs-1905-05304}
-%Umschreiben G={G1.... Gn} ist evolution des graphen
 
 
-\subsection{Embedding}
+\section{Static embedding}
 Embedding is a process in which the graph \(G = (V_g, E_g)\) is transformed into a set of vectors \(V\).
 These capture the graph topology, vertex-to-vertex relationship as well as other relevant information.
 This way, it is more accessible for analyzing the graph and comparing it to others.
@@ -200,7 +202,7 @@ When using graph embedding, there is one vector representing the whole graph. Th
 comparing two graph structures with each other.\\
 In order to achieve this transformation there are several methods available.
 
-\subsubsection{Word2Vec}
+\subsection{Word2Vec}
 The first method is word2vec which is the foundation for many other methods. 
 It takes a text \(T = (w_1, w_2, \ldots, w_n)\) as input and returns a set of vectors\(V\), where \(v_i\) is a distribution describing how likely it is for each word 
 to be a direct neighbor to it. The neighbors of a word \(w_c\) are defined as \(\{w_i | i \in (c-\epsilon, c+\epsilon)\}\) where \(\epsilon\) describes a predefined window size as seen in figure 2.
@@ -244,7 +246,7 @@ It then computes how likely it is for each word to be its neighbor and transform
 \cite{Godec.31.12.2018}
 
 
-\subsubsection{DeepWalk}
+\subsection{DeepWalk}
 This method is a continuation of the word2vec approach, but now the input is not a text, but a graph \(G = (V,E)\)
 It consists of three steps. The first being the sampling, where random walks are performed from each node.
 Hereby, a random walk is a path in the graph from a starting point \(v_i\) of defined length \(\lambda\). 
@@ -259,7 +261,7 @@ The result is a set of vectors \(V\) where each vector \(v_i\) is a distribution
 \cite{Godec.31.12.2018}
 
 
-\subsubsection{Node2Vec}
+\subsection{Node2Vec}
 This is an optimized version of DeepWalk.
 Again, there is the sampling phase in the beginning. The difference in the methods is, that in node2vec the random walks are now biased and not completely random.
 An order for the random walk is defined through two parameters \(p\) and \(q\). To evaluate which node to visit next the walk looks at the transition probability
@@ -273,7 +275,7 @@ ensures the walk to stay local around the starting point.
 In contrast, \(q\) describes the preference of nearer or further nodes. For \(q>1\) the walk favors closer nodes, for \(q<1\) nodes that are further away.
 \cite{Grover.03.07.2016}
 
-\subsubsection{Structural Deep Network Embedding}
+\subsection{Structural Deep Network Embedding}
 In contrast to the methods used before, SDNE does not use random walks. It aims to preserve local pairwise similarity which characterizes the local structure, and 
 as well as the global network structure.
 To achieve this, two autoencoder neural networks are used. These get an adjacency vector as input and construct node adjacency vectors as output.
@@ -283,7 +285,7 @@ At the end remains a collection of adjacency vectors which describe the graph st
 \cite{Godec.31.12.2018}
 
 
-\subsubsection{Graph2Vec}
+\subsection{Graph2Vec}
 Now not the nodes are represented by vectors, but the whole graph. For that, there are once again three steps. 
 In the first step the algorithm creates sub-graphs for each node and encodes them once again in a one-hot code. We then use these sub-graphs to train the network used in 
 word2vec to maximize the probability that a predicted sup-graph exists in the input graph. The embedding is then the result of the network.
@@ -307,12 +309,9 @@ To start out, the algorithm initializes a representative vector \(Q_t \in \mathb
 These vectors are created using the node2vec algorithm discussed in 2.3.3.
 
 \subsubsection{Node alignment}
-%Vektors are being combined into matrizes and then rotated to align
 A downside to node2vec is that, when running on a graph, it aims to minimize the word embedding distances but not consistency over multiple trainings.
 The resulting embedding could be in a two-dimensional space for example. It lays in a x-y-plane. Now imagine a rotation around the unused z-axis. The resulting graphs have the
 same structure but different orientation in the plane, thus not having an alignment, as seen in figure 3.
-%Besser ausführen -> Bildchen
-
 Similarly, when embedding two graphs \(G_{t_i}\) and \(G_{t_j}\) it is not guaranteed that, even if the graphs are identical, their axes align.
 To adjust those embeddings, tNodeEmbed uses an orthogonal transformation between embeddings at two time points \(t_i\) and \(t_j\)\cite{Schonemann.1966}.
 Used in this algorithm, it takes the matrix \(Q_t \in \mathbb{R}^{d\times |V|}\) of node embeddings at time \(t\). Then the matrices get aligned iteratively starting from the earliest timestep.
@@ -424,6 +423,7 @@ contains multiple similar sub-graphs. If a sub-graph existed in another part of 
 \subsection{Anomaly}
 Using the evolution of temporal graphs, repeating trends can be found. With the repeating patterns it is also possible to find anomalies in the graph which to not adhere to the pattern.
 This can be used to analyze how big of an impact e.g. political decisions can have on social constructs \cite{Beladev.2020}.
+
 
 \section{Conclusion}
 
