@@ -4,3 +4,6 @@ DeepWalk
 tNodeEmbed
 softmax-function
 Mücke
+SkipGram
+SkipGrams
+subreddit

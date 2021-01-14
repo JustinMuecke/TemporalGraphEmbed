@@ -191,6 +191,14 @@ Our graph \(G_T\) is then represented through \(G = (V_T,E_T)\) where \(V_T\) co
 The Evolution of the graph is defined as \(G_{E_T} = \{G_1, \ldots, G_T\}\). Here \(g_i\) is the static graph after time \(i*\Delta t\).
 \cite{DBLP:journals/corr/abs-1905-05304}
 
+\subsection{SkipGram}
+SkipGrams are a form of neural networks that are used heavily in the natural language processing. It is used to find the context of words in a training document.
+This network gets train by having a document as input and learning which words are in a fixed distance to it \cite{Rong.11.11.2014}.
+It consists of one input-, one hidden- and one output layer. 
+Each word in our text is assigned an ID through a one-hot coded vector, so that each word \(w_i\) can be represented like \((0_1, 0_2, \ldots, 0_{i-1}, 1_i, 0_{i+1}, \ldots 0_n)\).
+It then computes how likely it is for each word to be its neighbor and transforms it into a distribution using a softmax-function \cite{gao2018properties}.
+
+
 
 \section{Static embedding}
 Embedding is a process in which the graph \(G = (V_g, E_g)\) is transformed into a set of vectors \(V\).
@@ -209,10 +217,7 @@ The first method is word2vec which is the foundation for many other methods.
 It takes a text \(T = (w_1, w_2, \ldots, w_n)\) as input and returns a set of vectors\(V\), where \(v_i\) is a distribution describing how likely it is for each word 
 to be a direct neighbor to it. The neighbors of a word \(w_c\) are defined as \(\{w_i | i \in (c-\epsilon, c+\epsilon)\}\) where \(\epsilon\) describes a predefined window size as seen in figure 2.
 With this, the whole text is represented solely through vectors, where similar words have similar vectors.
-One way to achieve this, is to train a neural network to create the distributions. This neural network consists of one input-, one hidden- and one output layer. 
-Each word in our text is assigned an ID through a one-hot coded vector, so that each word \(w_i\) can be represented like \((0_1, 0_2, \ldots, 0_{i-1}, 1_i, 0_{i+1}, \ldots 0_n)\).
-It then computes how likely it is for each word to be its neighbor and transforms it into a distribution using a softmax-function.
-\cite{gao2018properties}
+One way to achieve this, is to train a SkipGram neural network to create the distributions. 
 \begin{figure}[h]
   \begin{center}
     \scalebox{0.8}{
@@ -353,7 +358,7 @@ Now, it is only a Question on how to define \(A,B\) and \(\sigma\).
 Due to the steps beforehand, each node is associated with a matrix \(X^{(v)} \in \mathbb{R}^{T \times d}\) consisting of 
 all embeddings \(T\), which are of size\(d\), thus the whole graph can be seen as \(G_X = X^{(v_1)},\ldots, X^{(v_{|V|})}\).
 To perform the wanted graph-prediction tasks, the matrices representing each node now need to be reduced into a single vector, so it can be used as input for a classifier, as in the static embeddings.
-For this it is proposed to use recurrent neural networks with long short term memory.
+For this it is proposed to use recurrent neural networks with long short term memory. These calculations come with a high computational cost.
 \cite{Singer.2019}
 
 \subsection{tdGraphEmbed}
@@ -393,7 +398,7 @@ With these equations the output calculation for each random walk \(W\) can be si
   \(\max\limits_\phi \sum\limits_{t \in T}\sum\limits_{W\in G_t}\sum\limits_{v_i^t} -log\sum\limits_{j\in V_t} e^{\phi(v_j^t)\cdot h}\:\:\: +\phi(v_i^t \cdot h)\).
 \end{center}
 The calculating neural network is trained using gradient descent \cite{Ruder.15.09.2016}. For each step, a fixed-length context is sampled from a walk \(W\), with which the error gradient is calculated and used to update the parameters of the model.
-The last equation gets computationally expensive for large graphs, thus a negative sampling strategy is used \cite{Goldberg.15.02.2014}. To enhance the efficiency even more, 
+The last equation also gets computationally expensive for large graphs, thus a negative sampling strategy is used \cite{Goldberg.15.02.2014}. To enhance the efficiency even more, 
 the algorithm only considers nodes that are active in each time step instead of all nodes in \(V\). Active nodes are those, who change one or more property over a time step.
 Even though, the optimizations influence the computation heavily, the embedding \(\phi\) is still accurate. \cite{Beladev.2020}
 
@@ -423,12 +428,23 @@ Another use for embeddings is answering the question of how alike two graphs are
 contains multiple similar sub-graphs. If a sub-graph existed in another part of the graph, this information can be used to predict its evolution, as the earlier formed sub-graph can be used as reference point \cite{Beladev.2020}.
 
 \subsection{Anomaly}
-Using the evolution of temporal graphs, repeating trends can be found. With the repeating patterns it is also possible to find anomalies in the graph which to not adhere to the pattern.
-This can be used to analyze how big of an impact e.g. political decisions can have on social constructs \cite{Beladev.2020}.
+Using the evolution of temporal graphs, repeating trends can be found. With the repeating patterns it is also possible to find anomalies in the graph which do not adhere to the pattern.
+This can be used to analyze how big of an impact e.g. political decisions can have on social constructs \cite{Beladev.2020}, or how active a community is. An example for the second one is 
+the activity of the \emph{Game of Thrones} subreddit at the release of a new episode of the series, as seen in \cite{Beladev.2020}. 
+
 
 
 \section{Conclusion}
+Graph embedding techniques are effective methods of transforming graphs into a more suitable structure to analyze them. They enable a more convenient method to analysis the whole evolution of a graph.
+Thanks to these methods, analyzations like clustering and link prediction were made possible.
+The last few years, the research in this area shifted towards the scalability of embedding methods to be able to work on graphs with millions of nodes \cite{Bruss.03.07.2019}.
+A big problem with scalability right now is the high computation and space cost. Thus, a lot of research focuses on a way to make the expensive graph analytics more efficient \cite{Cai.22.09.2017}.
 
+
+In my opinion, graph embedding are an essential and practical tool in the modern day life. They help in various field, e.g. analyzing the effect of political decisions on social groups. 
+But also for the day-to-day life they have become very important. They can be used to recommend following new people on social media platforms like Instagram and Facebook, based on your hobbies and the people you are already following.
+Furthermore, they can be used to find out what kind of music or movies you are interested in when using them on sites like Spotify and Netflix. 
+With increasing scale of these algorithms, the insights they can give us on networks should become increasingly more precise. As I have high hopes for the developments of more efficient algorithms, I look forward to seeing what they can do in the future.
 
 %%
 %% The next two lines define the bibliography style to be used, and
