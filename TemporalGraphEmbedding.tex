@@ -119,7 +119,7 @@
 %% article.
 \begin{abstract}
  Temporal graph embedding is the process of transforming a graph, which changes over time, into a set of vectors. 
- To show how this is done, this paper goes over different methods to use on static graph, and show how these can be modified to be applied on temporal ones as well. 
+ To show how this is done, this paper goes over different methods to use on static graphs like DeepWalk and node2vec, and show how these can be modified to be applied on temporal ones as well. 
  Furthermore, there will be different real world applications discussed.
 \end{abstract}
 
@@ -321,7 +321,7 @@ The resulting embedding could be in a two-dimensional space for example. It lays
 same structure but different orientation in the plane, thus not having an alignment, as seen in figure 3.
 Similarly, when embedding two graphs \(G_{t_i}\) and \(G_{t_j}\) it is not guaranteed that, even if the graphs are identical, their axes align.
 To adjust those embeddings, tNodeEmbed uses an orthogonal transformation between embeddings at two time points \(t_i\) and \(t_j\)\cite{Schonemann.1966}.
-Used in this algorithm, it takes the matrix \(Q_t \in \mathbb{R}^{d\times |V|}\) of node embeddings at time \(t\). Then the matrices get aligned iteratively starting from the earliest timestep.
+Used in this algorithm, it takes the matrix \(Q_t \in \mathbb{R}^{d\times |V|}\) of node embeddings at time \(t\). Then the matrices get aligned iteratively starting from the earliest time step.
 For the alignment an orthogonal matrix \(R\) between \(Q_t\) and \(Q_{t+1}\) is needed to result in the final embedding \(Q'_t = RQ_t\).
 The matrix are is approximated by : 
 \begin{center}
@@ -349,7 +349,7 @@ The function is defined recursively as:
   \(f_{t+1} = \sigma(Af_t(v) + BQ_tR_tv)\) \\
   and \(f_0(v) = \vec{0}\)
 \end{center}
-with \(A,B,R_t\) and \(Q_t\) being matrices, \(v\) again being a one-hot vector representing a node and \(\sigma\) being an activation funcion.
+with \(A,B,R_t\) and \(Q_t\) being matrices, \(v\) again being a one-hot vector representing a node and \(\sigma\) being an activation function.
 The final temporal embedding is now defined as the minimization of the loss-function:
 \begin{center}
   \( L = \min\limits_{A,B,Q_1, \ldots Q_T,R2, \ldots, RT} L_{task}\).
@@ -435,18 +435,18 @@ the activity of the \emph{Game of Thrones} subreddit at the release of a new epi
 
 
 \section{Conclusion}
-Graph embedding techniques are effective methods of transforming graphs into a more suitable structure to analyze them. They enable a more convenient method to analysis the whole evolution of a graph.
-Thanks to these methods, analyzations like clustering and link prediction were made possible.
-The last few years, the research in this area shifted towards the scalability of embedding methods to be able to work on graphs with millions of nodes \cite{Bruss.03.07.2019}.
+Graph embedding techniques are effective methods of transforming graphs into a more suitable structure to analyze them. They enable a more convenient method to analyze the whole evolution of a graph.
+Thanks to these embedding methods, tasks like clustering and link prediction are made possible.
+In the last few years, the research in this area shifted towards the scalability of embedding methods to be able to work on graphs with millions of nodes \cite{Bruss.03.07.2019}.
 A big problem with scalability right now is the high computation and space cost. Thus, a lot of research focuses on a way to make the expensive graph analytics more efficient \cite{Cai.22.09.2017}.
 
 
-In my opinion, graph embedding are an essential and practical tool in the modern day life. They help in various field, e.g. analyzing the effect of political decisions on social groups. 
+In my opinion, graph embedding in an essential and practical tool in the modern graph analysis. They help in various field, e.g. analyzing the effect of political decisions on social groups. %% Graphentheorie macht das -> Embedding hilft da
 But also for the day-to-day life they have become very important. They can be used to recommend following new people on social media platforms like Instagram and Facebook, based on your hobbies and the people you are already following.
 Furthermore, they can be used to find out what kind of music or movies you are interested in when using them on sites like Spotify and Netflix. 
 With increasing scale of these algorithms, the insights they can give us on networks should become increasingly more precise. As I have high hopes for the developments of more efficient algorithms, I look forward to seeing what they can do in the future.
 
-%%
+
 %% The next two lines define the bibliography style to be used, and
 %% the bibliography file.
 \bibliographystyle{IEEEtr}
