@@ -141,7 +141,7 @@
 
 \section{Introduction}
 With the surge of Facebook, Twitter and Instagram, huge and quickly changing social networks became a part of the everyday life of most people.
-Until recent, a lot of real life networks were only representable as static graphs. In case it was necessary to look at the development of a network, the only way was to use a set of static graphs and analyze them one by one.
+Until recent, a lot of real life networks were only representable as static graphs. If it was necessary to look at the development of a network, the only way was to use a set of static graphs and analyze them one by one.
 Out of the inconvenience of this procedure the use of temporal graphs was proposed. These capture the whole evolution of a network in one construct, making it easier to work with them.
 %% EMBEDDING
 To make the analyzation viable, graphs get embedded into sets of vectors, to act as an accurate representation. 
@@ -157,7 +157,7 @@ use them in a temporal context. Lastly, there will be a few examples of real wor
 
 \section{Preliminary}
 To start this paper out, let's first create a level playing field for all readers by laying out what exactly a Graph is, 
-how it can change over time and what is meant when we talk about embedding.
+how it can change over time and what is meant when talking about embedding.
 
 
 
@@ -170,11 +170,11 @@ To visualize graphs its common practice to denote nodes as circles with connecti
  \begin{figure}[h]
   \begin{center}
     \begin{tikzpicture}
-      \draw (0,-0.5) node [circle,inner sep=0pt,draw] {EO};
-      \draw (1.75,-1) node [circle,inner sep=0pt,draw] {JM};
-      \draw (0.5,-2) node [circle,inner sep=0pt,draw] {OK};
-      \draw (3,-0.5) node [circle,inner sep=0pt,draw] {YH};
-      \draw (2.75,-1.75) node [circle,inner sep=0pt,draw] {PB};
+      \draw (0,-0.5) node [circle,inner sep=0pt,draw,minimum size=0.5cm] {E};
+      \draw (1.75,-1) node [circle,inner sep=0pt,draw, minimum size=0.5cm] {J};
+      \draw (0.5,-2) node [circle,inner sep=0pt,draw, minimum size=0.5cm] {O};
+      \draw (3,-0.5) node [circle,inner sep=0pt,draw, minimum size=0.5cm] {Y};
+      \draw (2.75,-1.75) node [circle,inner sep=0pt,draw, minimum size=0.5cm] {P};
 
       \draw (0.27, -0.56) -- (1.49, -0.95);
       \draw (1.55, -1.17) -- (0.7, -1.8);
@@ -186,17 +186,17 @@ To visualize graphs its common practice to denote nodes as circles with connecti
 \end{figure}
 
 \subsection{Temporal Graphs}
-A temporal graph, on the other hand, is a graph that changes its structure over time. A structural change is defined as the replacement of object in \(V\) or \(E\)  %%Zweiter Satz zu umgs.
-Our graph \(G_T\) is then represented through \(G = (V_T,E_T)\) where \(V_T\) contains every vertex and \(E_T\) every node, that is in the graph at one point.
-The Evolution of the graph is defined as \(G_{E_T} = \{G_1, \ldots, G_T\}\). Here \(g_i\) is the static graph after time \(i*\Delta t\).
+A temporal graph, on the other hand, is a graph that changes its structure over time. A structural change is defined as the replacement of object in \(V\) or \(E\).
+The graph \(G\) is then represented through \(G = (V,E)\) where \(V_T\) contains every vertex and \(E_T\) every node, that is in the graph at one point.
+The Evolution of the graph is defined as \(G_{E_T} = \{G_1, \ldots, G_T\}\). Here \(G_i\) is the static graph after time \(i*\Delta t\).
 \cite{DBLP:journals/corr/abs-1905-05304}
 
 \subsection{SkipGram}
 SkipGrams are a form of neural networks that are used heavily in the natural language processing. It is used to find the context of words in a training document.
-This network gets train by having a document as input and learning which words are in a fixed distance to it \cite{Rong.11.11.2014}.
+This network gets trained by having a document as input and learning which words are in a fixed distance to each other \cite{Rong.11.11.2014}.
 It consists of one input-, one hidden- and one output layer. 
 Each word in our text is assigned an ID through a one-hot coded vector, so that each word \(w_i\) can be represented like \((0_1, 0_2, \ldots, 0_{i-1}, 1_i, 0_{i+1}, \ldots 0_n)\).
-It then computes how likely it is for each word to be its neighbor and transforms it into a distribution using a softmax-function \cite{gao2018properties}.
+It then computes how likely it is for each word to be the neighbor of each other word and transforms it into a distribution using a softmax-function \cite{gao2018properties}.
 
 
 
@@ -214,8 +214,8 @@ In order to achieve this transformation there are several methods available.
 
 \subsection{Word2Vec}
 The first method is word2vec which is the foundation for many other methods. 
-It takes a text \(T = (w_1, w_2, \ldots, w_n)\) as input and returns a set of vectors\(V\), where \(v_i\) is a distribution describing how likely it is for each word 
-to be a direct neighbor to it. The neighbors of a word \(w_c\) are defined as \(\{w_i | i \in (c-\epsilon, c+\epsilon)\}\) where \(\epsilon\) describes a predefined window size as seen in figure 2.
+It takes a text \(T = (w_1, w_2, \ldots, w_n)\) as input and returns a set of vectors \(V\), where \(v_i\) is a distribution describing how likely it is for each word 
+to be a direct neighbor to a root word. The neighbors of a word \(w_c\) are defined as \(\{w_i | i \in (c-\epsilon, c+\epsilon)\}\) where \(\epsilon\) describes a predefined window size as seen in figure 2.
 With this, the whole text is represented solely through vectors, where similar words have similar vectors.
 One way to achieve this, is to train a SkipGram neural network to create the distributions. 
 \begin{figure}[h]
@@ -261,7 +261,7 @@ The following nodes are generated by:
 \begin{center}
   \(P(v_i = x|v_{i-1} = y) = \begin{cases} \frac{\pi_{xy}}{Z} &\text{if} (x,y) \in E \\ 0 & \text{otherwise} \end{cases}\)
 \end{center} 
-where \(\pi_{xy}\) is the probability between nodes \(x\) and \(y\) with\(Z\) as the normalizing constant.\\
+where \(\pi_{xy}\) is the probability between nodes \(x\) and \(y\) with \(Z\) as the normalizing constant.\\
 It is sufficient to perform \(32-64\) random walks per Node. The resulting paths are of the same structure as sentences in a text, so 
 the word2vec method can now be used on it.
 The result is a set of vectors \(V\) where each vector \(v_i\) is a distribution of the probability that two nodes are next to each other.
@@ -301,7 +301,7 @@ word2vec to maximize the probability that a predicted sup-graph exists in the in
 
 
 \section{Embedding of Temporal Graphs}
-Let \(G = (V,E)\) be a temporal graph with \(G_t=\{G_{t_1}, \ldots,G_{t_T}\} \) as its evolution over the time steps \(T\).
+Let \(G = (V,E)\) be a temporal graph with \(G_{E_T} = \{G_1, \ldots, G_T\}\) as its evolution over the time steps \(T\).
 The goal is now, to create a vector space which can be used to analyze the graph to find anomalies in it, compare it to other graphs, classify nodes or predict if 
 certain links are going to exist.
 Depending on which outcome is wanted, different methods have to be used to optimize it. For predictions on the node level like node classification and link prediction a node-level algorithm should be used. 
@@ -382,7 +382,7 @@ The nodes in a neighborhood, later referred to as context nodes, are defined as:
 \end{center}
 Using these and the graph \(G_t\) the algorithm maximizes the equation: 
 \begin{center}
-  \(\log{p(v_i^t | N_s(v_i^t), G_t)}\)
+  \(\log{p(v_i^t | N_s(v_i^t), G_t)}\).
 \end{center}
 The goal is to learn a \(d-\)dimensional representation \(\phi\) where \(\phi(v_i^t)\) is the mapping of node
 \(v_i \in V_t\) and \(\phi(G_t)\) the mapping of the graph. With this mapping and a soft-max function the equation above can be caluclated with: 
