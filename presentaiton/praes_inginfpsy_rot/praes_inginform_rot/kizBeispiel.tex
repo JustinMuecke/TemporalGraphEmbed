@@ -1,0 +1,251 @@
+\documentclass{beamer}
+\mode<presentation>
+{
+  \usetheme{myulm}
+  \setbeamercovered{transparent}
+  \setbeamertemplate{navigation symbols}{} % no navigation bar
+  \setbeamersize{sidebar width left=1.17cm}
+}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\usepackage{array}
+\usepackage{colortbl} % ING INF PSY
+
+% Anfang der Titelfolie
+% Anpassung von: Titel, Untertitel, Autor, Datum und Institut
+
+\title{Temporal Graph Embedding}
+\subtitle{}
+\author{Justin Mücke}
+\newcommand{\presdatum}{18.02.21} % alternativ zu \today: Eingabe eines festen Datums
+\institute
+{Universität Ulm, Seminar Data-Science\\}
+%Ende der Titelfolie
+
+
+% Anfang der Kopfzeile der Folien
+% Anpassung von: Zwischentitel, Leitthema oder Name
+% Das Datum wird oben geändert: unter \presdatum{}!
+
+\newcommand{\zwischentitel}{\insertsection}
+\newcommand{\leitthema}{Temporal Graph Embedding}
+% Ende der Kopfzeile
+
+% Anfang der Folien
+\begin{document}
+\hspace*{-1.49cm}
+\frame[plain]{\titlepage}
+
+% Das Inhaltsverzeichnis
+\hspace*{-0.7cm}
+\section*{Inhalt/Überblick} % diese Section erscheint nicht im Inhaltsverzeichnis
+\begin{frame}
+  \frametitle{Inhaltsverzeichnis}
+  \tableofcontents
+\end{frame}
+
+
+% 1. Folie
+\section{Temporale Graphen}
+\begin{frame}
+  \frametitle{Temporale Graphen}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Graph verändert sich über Zeit
+    \item Darstellung durch \(G=(V,E)\)
+    \item Evolution gegeben durch: \(G_T =\{G_1, \ldots, G_T\}\)
+  \end{itemize}
+\end{frame}
+
+% 2. Folie
+\section{Einbettung statischer Graphen}
+\begin{frame}
+  \frametitle{Einbettung statischer Graphen}
+% \vspace{-2.6cm}
+  \begin{itemize}
+    \item Graphen als mathematische Struktur sehr komplex
+    \item überführung in Menge von Vektoren
+    \item beibehalten der Graphtopologie, Knoten-Knoten Beziehung 
+    \item 2 Kategorien:
+    \begin{itemize}
+      \item Node Embedding
+      \item Graph Embedding
+    \end{itemize} 
+  \end{itemize}
+\end{frame}
+
+\subsection{word2vec}
+\begin{frame}
+  \frametitle{word2vec}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Ansatz aus der Sprachverarbeitung
+    \item Input: Text \(T = (w_1, w_2, \ldots, w_n)\)
+    \item Berechnung der Wahrscheinlichkeit, dass zwei Wörter benachbart sind
+    \item Nachbarn: \(\{w_i | i \in (c-\epsilon, c+\epsilon)\}\)
+    \item Output: Menge von Vektoren
+  \end{itemize}
+  % TODO: Include picture
+\end{frame}
+   
+\subsection{DeepWalk}
+\begin{frame}
+  \frametitle{DeepWalk}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Weiterführung des word2vec Ansatz
+    \item 3 Steps: 
+    \begin{itemize}
+      \item Sampling: Ausführen von RandomWalks
+      \item berechnung des nächsten Knotens:  \(P(v_i = x|v_{i-1} = y) = \begin{cases} \frac{\pi_{xy}}{Z} &\text{if} (x,y) \in E \\ 0 & \text{otherwise} \end{cases}\)
+      \item Erzeugen textliche Struktur auf welcher word2vec angewandt werden kann.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\subsection{node2vec}
+\begin{frame}
+  \frametitle{node2vec}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item weiterführung des DeepWalk Ansatz
+    \item Sampling über RandomWalks
+    \item Nodes erhalten bias \(\alpha\)
+    \item  \(\alpha_{pq}(xy) = \begin{cases} \frac{1}{p} & \text{if } d_{xy} = 0 \\ 1 & \text{if } d_{xy} = 1 \\\frac{1}{q} & \text{if } d_{xy} = 2 \\\end{cases}\)
+    \item  \(q < 1 \rightarrow\) eher zu fernen Knoten
+    \item  \(q > 1 \rightarrow\) eher zu nahen Knoten
+  \end{itemize}
+  % TODO: Include picture
+\end{frame}
+
+\section{Einbettung temporaler Graphen}
+\subsection{tdNodeEmbed}
+\begin{frame}
+  \frametitle{tNodeEmbed}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Node Level Algorithmus
+    \item Kann in drei Teile eingeteilt werden
+    \begin{itemize}
+      \item Initialization
+      \item Node alignment
+      \item Finalization
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+% 3. Folie
+\begin{frame}
+  \frametitle{Initialization}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Erstellen eines repräsentativen Vektors für alle Knoten
+    \item Nutzung des node2vec Algorithmus
+  \end{itemize}
+\end{frame}
+% 3. Folie
+\begin{frame}
+  \frametitle{Node Alignment}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Keine Garantie, dass bei der Einbettung die Achsen der Graphen überdecken
+    \item Orthogonale Transformation zum Ausrichten
+    \item Ausrichten der Graphen \(Q_t\) und \(Q_t+1\) mit \(Q'_t = RQ_t\)
+    \item Annäherung durch: \(R_{t+1} = \argmin\limits_{R s.t. R^TR =I} \|RQ_{t+1} - Q_t\| \)
+    \item Iterativer Vorgang über ganze Evolution
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Finalization}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Algorithmus kann sowohl für Node klassifizierung als auch für Link prediction genutzt werden
+    \item Einziger unterschied ist die genutzte Verlustfunktion
+    \item Node classification:  \(L_{task} = -\sum\limits_{v\in V} \log {Pr(class(v)|f_T(v))}\)
+    \item Link prediction:   \(L_{task} = -\sum\limits_{v_1, v_2 \in V} \log{Pr((v_1,v_2)\in E | g(f_T(v_1), f_T(v_2)))}\)
+    \item \(f_T\) rekursiv definiert als \(f_{t+1} = \sigma(Af_t(v) + BQ_tR_tv)\)
+    \item Embedding nun definiert als \( L = \min\limits_{A,B,Q_1, \ldots Q_T,R2, \ldots, RT} L_{task}\)
+  \end{itemize}
+\end{frame}
+
+\subsection{tdGraphEmbed}
+\begin{frame}
+  \frametitle{tdGraphEmbed}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Graph Level Algorithmus
+    \item Ziel ist es, Graph in einen d-dimensionalen Raum \(\mathbb{R}^d\) einzubetten.
+    \item Erstellung einer Mappingfunktion
+    \item Kann ebenfalls in drei Teile gegliedert werden
+    \begin{itemize}
+      \item Random Walks
+      \item Context Nodes
+      \item Optimization
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Random Walks}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Algorithmus nutzt Random Walks
+    \item Berechnung der Wahrscheinlichkeit, dass Graph durch die random Walks beschrieben widespread
+    \item Wahrscheinlichkeit definiert als:   \(Pr(G_t|W_{v_1}, W_{v_2},\ldots, W_{v_k}))\)
+    \item Random Walks werden konkateniert um ein Dokument zu formen
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Context Nodes}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Defined as:   \(N_s(v_i^t)=\{v_{i-\omega}^t, \ldots, v_{i+\omega}^t\}\).
+    \item Mit \(\log{p(v_i^t | N_s(v_i^t), G_t)}\) können die nächsten Nodes in random Walks vorhergesagt werden
+    \item Ziel: lernen einer repräsentation \(\phi\)
+    \begin{itemize}
+      \item \(\phi(v_i^t)\): Mapping einer Node 
+      \item \(\phi(G_t)\): Mapping des Graphen
+    \end{itemize}
+    \item Berechnung von \(p(v_i^t | N_s(v_i^t), G_t)\) mit Mapping: 
+    \(p(V_i^t|N_s(v_i^t), G_t) = \frac{e^{\phi(v_i^t) \cdot h}}{\sum\limits_{j \in V_t} e^{\phi(v_j^t) \cdot h}} \)
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Optimization}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Output berechnung kann vereinfacht werden zu:   
+    \(\max\limits_\phi \sum\limits_{t \in T}\sum\limits_{W\in G_t}\sum\limits_{v_i^t} -log\sum\limits_{j\in V_t} e^{\phi(v_j^t)\cdot h}\:\:\: +\phi(v_i^t \cdot h)\)
+    \item Zur Berechnung kann ein neuronales Netz genutzt werden
+    \item Da dies sehr resourcen kostig werden kann wird negative sampling genutzt
+    \item Zur weiteren effizientsteigerung werden immer nur Knoten betrachtet, bei denen sich etwa verändert hat.
+  \end{itemize}
+\end{frame}
+
+\section{Anwendungen}
+\begin{frame}
+  \frametitle{Anwendungen}
+%\vspace{-2.6cm}
+  \begin{itemize}
+    \item Node Classification
+    \item Link prediction
+    \item Clustering
+    \item Similarity
+    \item Anomaly detection
+  \end{itemize}
+\end{frame}
+
+
+\end{document}

@@ -214,7 +214,7 @@ In order to achieve this transformation there are several methods available.
 
 \subsection{Word2Vec}
 The first method is word2vec which is the foundation for many other methods. 
-It takes a text \(T = (w_1, w_2, \ldots, w_n)\) as input and returns a set of vectors \(V\), where \(v_i\) is a distribution describing how likely it is for each word 
+It takes a text \(T = (w_1, w_2, \ldots, w_n)\) as input and, using SkipGram networks, returns a set of vectors \(V\), where \(v_i\) is a distribution describing how likely it is for each word 
 to be a direct neighbor to a root word. The neighbors of a word \(w_c\) are defined as \(\{w_i | i \in (c-\epsilon, c+\epsilon)\}\) where \(\epsilon\) describes a predefined window size as seen in figure 2.
 With this, the whole text is represented solely through vectors, where similar words have similar vectors.
 One way to achieve this, is to train a SkipGram neural network to create the distributions. 
@@ -323,9 +323,9 @@ Similarly, when embedding two graphs \(G_{t_i}\) and \(G_{t_j}\) it is not guara
 To adjust those embeddings, tNodeEmbed uses an orthogonal transformation between embeddings at two time points \(t_i\) and \(t_j\)\cite{Schonemann.1966}.
 Used in this algorithm, it takes the matrix \(Q_t \in \mathbb{R}^{d\times |V|}\) of node embeddings at time \(t\). Then the matrices get aligned iteratively starting from the earliest time step.
 For the alignment an orthogonal matrix \(R\) between \(Q_t\) and \(Q_{t+1}\) is needed to result in the final embedding \(Q'_t = RQ_t\).
-The matrix are is approximated by : 
+The matrix is approximated by : 
 \begin{center}
-  \(R_{t+1} = \argmin_{R s.t. R^TR =I} \|RQ_{t+1} - Q_t\| \)
+  \(R_{t+1} = \argmin\limits_{R s.t. R^TR =I} \|RQ_{t+1} - Q_t\| \)
 \end{center}
 where \(R_{t+1} \in \mathbb{R}^{d \times d} \) is the transformation which fits the time steps the most.
 \begin{figure}[h]
@@ -343,7 +343,7 @@ For the link prediction task it considers a binary classification loss:
 \begin{center}
   \(L_{task} = -\sum\limits_{v_1, v_2 \in V} \log{Pr((v_1,v_2)\in E | g(f_T(v_1), f_T(v_2)))}\)
 \end{center}
-The Algorithm now wants to learn a function \(F_T\) so that \(f_T(v) = F_T(v,G_1, \ldots, G_T)\) that optimizes for \(L_Task\).
+The Algorithm now wants to learn a function \(F_T\) so that \(f_T(v) = F_T(v,G_1, \ldots, G_T)\) that optimizes for \(L_{Task}\).
 The function is defined recursively as: 
 \begin{center}
   \(f_{t+1} = \sigma(Af_t(v) + BQ_tR_tv)\) \\
