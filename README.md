@@ -11,19 +11,19 @@ Furthermore, there will be different real world applications discussed.
 
 ## Parts
 
- * Introduction
- * Preliminary
-  * Graphs
-  * Temporal Graphs
-  * SkipGram
- * Static Embeddings
-  * Word2Vec
-  * DeepWalk
-  * Node2Vec 
-  * SDNE
-  * Graph2Vec
- * Embedding of Temporal Graphs
-  * tNodeEmbed
-  * tdGraphEmbed
- * Application
+ - Introduction
+ - Preliminary
+   - Graphs
+   - Temporal Graphs
+   - SkipGram
+ - Static Embeddings
+   - Word2Vec
+   - DeepWalk
+   - Node2Vec 
+   - SDNE
+   - Graph2Vec
+ - Embedding of Temporal Graphs
+   - tNodeEmbed
+   - tdGraphEmbed
+ - Application
 
