@@ -120,6 +120,7 @@
 \begin{abstract}
  Temporal graph embedding is the process of transforming a graph, which changes over time, into a set of vectors. 
  To show how this is done, this paper goes over different methods to use on static graphs like DeepWalk and node2vec, and show how these can be modified to be applied on temporal ones as well. 
+ The different methods were chosen depending on how well they help to show different aspects of the field.
  Furthermore, there will be different real world applications discussed.
 \end{abstract}
 
@@ -330,7 +331,7 @@ The matrix is approximated by :
 where \(R_{t+1} \in \mathbb{R}^{d \times d} \) is the transformation which fits the time steps the most.
 \begin{figure}[h]
   \includegraphics[scale=0.1]{UnalignedGraphs.png}
-  \caption{a) graph described by first embedding. b) graph described by second embedding. The red node do not align even though the graph structure is the same.}
+  \caption{a) embedding of the first graph. b) embedding of the second graph. The red node do not align even though the graph structure is the same.}
 \end{figure}
 
 \subsubsection{Finalization}
@@ -385,7 +386,7 @@ Using these and the graph \(G_t\) the algorithm maximizes the equation:
   \(\log{p(v_i^t | N_s(v_i^t), G_t)}\).
 \end{center}
 The goal is to learn a \(d-\)dimensional representation \(\phi\) where \(\phi(v_i^t)\) is the mapping of node
-\(v_i \in V_t\) and \(\phi(G_t)\) the mapping of the graph. With this mapping and a soft-max function the equation above can be caluclated with: 
+\(v_i \in V_t\) and \(\phi(G_t)\) the mapping of the graph. With this mapping and a soft-max function the equation above can be calculated with: 
 \begin{center}
   \(p(V_i^t|N_s(v_i^t), G_t) = \frac{e^{\phi(v_i^t) \cdot h}}{\sum\limits_{j \in V_t} e^{\phi(v_j^t) \cdot h}}   \)\\
   where \(h=\sum\limits_{c \in N_s(v_i^t)} \phi(v_c^t) + \phi(G_t)\)
@@ -406,13 +407,15 @@ Even though, the optimizations influence the computation heavily, the embedding 
 \section{Application}
 Nowadays, graphs are used for a variety of applications. With it comes the need to analyze such graphs. They model e.g. Protein to Protein interactions in biology, social networks in social sciences and even  so-called word co-occurence in linguistics.
 To understand and analyze those structures better, scientists have aimed to model such graphs and the interaction between different entities they contain.
-Those analytical tasks can be divided into four main groups: node classification, link prediction, clustering and visualization \cite{Goyal.2018}.
+Depending on the scientific task, it is either better to use a node-level or a graph-level algorithm\cite{Goyal.2018}.
+
 
 \subsection{Node classification}
-A lot of the information contained in graphs can be put into different categories e.g. gender, age, demographic and political beliefs. Those categories are called labels and can be applied to nodes in a graph representing e.g. users of a social network.
+One application for node-level algorithms is \emph{node classification}. This is used when a lot of the information contained in graphs can be put into different categories e.g. gender, age, demographic and political beliefs. Those categories are called labels and can be applied to nodes in a graph representing e.g. users of a social network.
 Such labels can then be used to recommend new connections between individuals, movies and music based on the interests and personalize advertisements.
 
 \subsection{Link prediction}
+Another use for node-level algorithms is link prediction, as it is looking at the relations between single nodes in the graph.
 Every relation in a graph describing a social network, can be described  through an edge or link. So, whenever one entity engages another, the graph changes.
 The link prediction problem defines the question, how likely it is, given a snapshot of such a social network, that members engage each other in the near future \cite{LibenNowell.op.2003}.
 Everybody has an intuitive feeling for who would follow whom. Due to the fact that they may have the same friends, live in the same city or have the same hobbies. 
@@ -421,10 +424,10 @@ Link prediction is the attempt to make these intuitive thoughts more precise and
 \subsection{Clustering}
 With increasing graph size, increases the probability that two nodes share a lot of labels. 
 Clustering aims to find such nodes and generate a sub-graph out of them. Using this, e.g. users of an online social network with the same interests can be quickly found as they are members of the same sub-graph.
-It also enables to structure the network, as one can label whole sub-graphs instead of individual nodes. \cite{Ding.2001}
+It also enables to structure the network, as one can label whole sub-graphs instead of individual nodes \cite{Ding.2001}. Here as well, node-level algorithms are most likely used. 
 
 \subsection{Similarity}
-Another use for embeddings is answering the question of how alike two graphs are. The more similar the topologies of the two graphs are, the closer the embeddings are to one another. This can be used on whole graphs or to see if a graph
+Another use for embeddings is answering the question of how alike two graphs are. For this purpose, a graph-level algorithm is optimal in contrast to the applications mentioned before. The more similar the topologies of the two graphs are, the closer the embeddings are to one another. This can be used on whole graphs or to see if a graph
 contains multiple similar sub-graphs. If a sub-graph existed in another part of the graph, this information can be used to predict its evolution, as the earlier formed sub-graph can be used as reference point \cite{Beladev.2020}.
 
 \subsection{Anomaly}

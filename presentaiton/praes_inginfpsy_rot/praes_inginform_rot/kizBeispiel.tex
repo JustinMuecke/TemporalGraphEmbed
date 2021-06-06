@@ -71,8 +71,8 @@
 % \vspace{-2.6cm}
   \begin{itemize}
     \item Graphen als mathematische Struktur sehr komplex
-    \item überführung in Menge von Vektoren
-    \item beibehalten der Graphtopologie, Knoten-Knoten Beziehung 
+    \item Überführung in Menge von Vektoren
+    \item Beibehalten der Graphtopologie, Knoten-Knoten Beziehung 
     \item 2 Kategorien:
     \begin{itemize}
       \item Node Embedding
@@ -115,7 +115,7 @@
   \frametitle{node2vec}
 %\vspace{-2.6cm}
   \begin{itemize}
-    \item weiterführung des DeepWalk Ansatz
+    \item Weiterführung des DeepWalk Ansatz
     \item Sampling über RandomWalks
     \item Nodes erhalten bias \(\alpha\)
     \item  \(\alpha_{pq}(xy) = \begin{cases} \frac{1}{p} & \text{if } d_{xy} = 0 \\ 1 & \text{if } d_{xy} = 1 \\\frac{1}{q} & \text{if } d_{xy} = 2 \\\end{cases}\)
@@ -226,11 +226,11 @@
   \frametitle{Optimization}
 %\vspace{-2.6cm}
   \begin{itemize}
-    \item Output berechnung kann vereinfacht werden zu:   
+    \item Output Berechnung kann vereinfacht werden zu:   
     \(\max\limits_\phi \sum\limits_{t \in T}\sum\limits_{W\in G_t}\sum\limits_{v_i^t} -log\sum\limits_{j\in V_t} e^{\phi(v_j^t)\cdot h}\:\:\: +\phi(v_i^t \cdot h)\)
     \item Zur Berechnung kann ein neuronales Netz genutzt werden
-    \item Da dies sehr resourcen kostig werden kann wird negative sampling genutzt
-    \item Zur weiteren effizientsteigerung werden immer nur Knoten betrachtet, bei denen sich etwa verändert hat.
+    \item Da dies sehr Resourcen kostig werden kann wird negative sampling genutzt
+    \item Zur weiteren Effizientsteigerung werden immer nur Knoten betrachtet, bei denen sich etwas verändert hat.
   \end{itemize}
 \end{frame}
 
@@ -245,6 +245,14 @@
     \item Similarity
     \item Anomaly detection
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Anwendungen}
+vspace{-2.6cm}
+  \begin{center}
+    Vielen dank für Ihre Aufmerksamkeit!
+  \end{center}
 \end{frame}
 
 

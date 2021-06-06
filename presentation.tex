@@ -60,7 +60,7 @@
   \begin{itemize}
     \item Graph verändert sich über Zeit
     \item Darstellung durch \(G=(V,E)\)
-    \item Evolution gegeben durch: \(G_T =\{G_1, \ldots, G_T\}\)
+    \item Evolution gegeben durch: \(G_T =\{G_1, \ldots, G_t\}\)
   \end{itemize}
 \end{frame}
 
@@ -71,8 +71,8 @@
 % \vspace{-2.6cm}
   \begin{itemize}
     \item Graphen als mathematische Struktur sehr komplex
-    \item überführung in Menge von Vektoren
-    \item beibehalten der Graphtopologie, Knoten-Knoten Beziehung 
+    \item Überführung in Menge von Vektoren
+    \item Beibehalten der Graphtopologie, Knoten-Knoten Beziehung 
     \item 2 Kategorien:
     \begin{itemize}
       \item Node Embedding
@@ -115,7 +115,7 @@
   \frametitle{node2vec}
 %\vspace{-2.6cm}
   \begin{itemize}
-    \item weiterführung des DeepWalk Ansatz
+    \item Weiterführung des DeepWalk Ansatz
     \item Sampling über RandomWalks
     \item Nodes erhalten bias \(\alpha\)
     \item  \(\alpha_{pq}(xy) = \begin{cases} \frac{1}{p} & \text{if } d_{xy} = 0 \\ 1 & \text{if } d_{xy} = 1 \\\frac{1}{q} & \text{if } d_{xy} = 2 \\\end{cases}\)
@@ -199,7 +199,7 @@
 %\vspace{-2.6cm}
   \begin{itemize}
     \item Algorithmus nutzt Random Walks
-    \item Berechnung der Wahrscheinlichkeit, dass Graph durch die random Walks beschrieben widespread
+    \item Berechnung der Wahrscheinlichkeit, dass Graph durch die random Walks beschrieben wird
     \item Wahrscheinlichkeit definiert als:   \(Pr(G_t|W_{v_1}, W_{v_2},\ldots, W_{v_k}))\)
     \item Random Walks werden konkateniert um ein Dokument zu formen
   \end{itemize}
@@ -210,8 +210,8 @@
 %\vspace{-2.6cm}
   \begin{itemize}
     \item Defined as:   \(N_s(v_i^t)=\{v_{i-\omega}^t, \ldots, v_{i+\omega}^t\}\).
-    \item Mit \(\log{p(v_i^t | N_s(v_i^t), G_t)}\) können die nächsten Nodes in random Walks vorhergesagt werden
-    \item Ziel: lernen einer repräsentation \(\phi\)
+    \item Mit \(\log{p(v_i^t | N_s(v_i^t), G_t)}\) können die nächsten Nodes in random walks vorhergesagt werden
+    \item Ziel: lernen einer Repräsentation \(\phi\)
     \begin{itemize}
       \item \(\phi(v_i^t)\): Mapping einer Node 
       \item \(\phi(G_t)\): Mapping des Graphen
@@ -229,8 +229,8 @@
     \item Output berechnung kann vereinfacht werden zu:   
     \(\max\limits_\phi \sum\limits_{t \in T}\sum\limits_{W\in G_t}\sum\limits_{v_i^t} -log\sum\limits_{j\in V_t} e^{\phi(v_j^t)\cdot h}\:\:\: +\phi(v_i^t \cdot h)\)
     \item Zur Berechnung kann ein neuronales Netz genutzt werden
-    \item Da dies sehr resourcen kostig werden kann wird negative sampling genutzt
-    \item Zur weiteren effizientsteigerung werden immer nur Knoten betrachtet, bei denen sich etwa verändert hat.
+    \item Da dies sehr Resourcen aufwändig werden kann wird negative sampling genutzt
+    \item Zur weiteren Effizienzsteigerung werden immer nur Knoten betrachtet, bei denen sich etwas verändert hat.
   \end{itemize}
 \end{frame}
 
@@ -246,6 +246,17 @@
     \item Anomaly detection
   \end{itemize}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{}
+ %%vspace{-2.6cm}
+  \begin{center}
+    Vielen Dank für Ihre Aufmerksamkeit!
+  \end{center}
+\end{frame}
+
+
 
 
 \end{document}
